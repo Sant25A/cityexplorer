@@ -16,4 +16,8 @@ export class Home {
     { id: 2, name: "Alameda central", location: "Toluca Centro", image: "https://picsum.photos/300/200?2", rating: 4.7 },
     { id: 3, name: "Centro Tolzú", location: "Toluca Centro", image: "https://picsum.photos/300/200?3", rating: 4.8 }
   ];
+
+  onToggleFavorite(place: any) {
+    place.isFavorite = !place.isFavorite;
+  }
 }

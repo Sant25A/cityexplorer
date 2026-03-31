@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-place-card',
@@ -10,5 +10,11 @@ import { RouterModule } from '@angular/router';
   styleUrl: './place-card.css',
 })
 export class PlaceCard {
-  @Input() place: any; 
+  @Input() place: any;
+
+  @Output() toggleFavorite = new EventEmitter<any>();
+
+  onToggleFavorite() {
+    this.toggleFavorite.emit(this.place);
+  }
 }

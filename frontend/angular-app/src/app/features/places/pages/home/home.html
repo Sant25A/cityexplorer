@@ -58,6 +58,6 @@
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-    <app-place-card *ngFor="let p of places" [place]="p"> </app-place-card>
+    <app-place-card *ngFor="let p of places" [place]="p" (toggleFavorite)="onToggleFavorite($event)"> </app-place-card>
   </div>
 </section>
