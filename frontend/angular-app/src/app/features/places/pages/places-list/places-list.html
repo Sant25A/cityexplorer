@@ -1,1 +1,37 @@
-<p>places-list works!</p>
+<section class="space-y-8">
+  <!-- BUSCADOR -->
+  <div class="flex flex-col md:flex-row gap-4">
+    <input
+      [(ngModel)]="search"
+      type="text"
+      placeholder="Buscar lugares..."
+      class="input input-bordered w-full"
+    />
+
+    <button class="btn btn-primary">Buscar</button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="flex flex-col md:flex-row gap-4">
+    <select [(ngModel)]="selectedCity" class="select select-bordered w-full">
+      <option value="">Todas las ciudades</option>
+      <option>CDMX</option>
+      <option>Guadalajara</option>
+    </select>
+
+    <select [(ngModel)]="selectedCategory" class="select select-bordered w-full">
+      <option value="">Todas las categorías</option>
+      <option>Café</option>
+      <option>Parque</option>
+      <option>Museo</option>
+      <option>Restaurante</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <app-place-card *ngFor="let place of places" [place]="place"></app-place-card>
+  </div>
+
+  <p *ngIf="places.length === 0" class="text-center opacity-60">No se encontraron lugares</p>
+</section>
