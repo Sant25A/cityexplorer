@@ -58,61 +58,6 @@
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-    <div
-      *ngFor="let place of places"
-      class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden group cursor-pointer border border-base-300"
-    >
-      <figure class="relative overflow-hidden">
-        <img
-          [src]="place.image"
-          alt="Lugar"
-          class="group-hover:scale-110 transition-transform duration-700 w-full h-56 object-cover"
-        />
-        <div class="absolute top-4 right-4 badge badge-base-100 font-bold gap-1 p-3 shadow-lg">
-          <span class="text-yellow-500 text-xs">★</span>
-          {{ place.rating }}
-        </div>
-      </figure>
-
-      <div class="card-body p-6">
-        <h3 class="card-title text-2xl font-bold group-hover:text-primary transition-colors">
-          {{ place.name }}
-        </h3>
-
-        <div class="flex items-center gap-1 text-sm opacity-70 mb-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-secondary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          {{ place.location }}
-        </div>
-
-        <p class="text-sm font-light line-clamp-2 italic">
-          Perfecto para una escapada de fin de semana en {{ place.location }}.
-        </p>
-
-        <div class="card-actions justify-end mt-6">
-          <button class="btn btn-primary btn-sm btn-outline group-hover:btn-active transition-all">
-            Ver detalles
-          </button>
-        </div>
-      </div>
-    </div>
+    <app-place-card *ngFor="let p of places" [place]="p"> </app-place-card>
   </div>
 </section>
