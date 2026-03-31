@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "./projects/**/*.{html,ts}", // Añadimos esto por si acaso
+    "./projects/**/*.{html,ts}", 
   ],
   theme: {
     extend: {
@@ -20,8 +20,8 @@ module.exports = {
           "primary": "#065B9C",
           "secondary": "#31B9F5",
           "accent": "#5FCAF8",
-          "neutral": "#2B3440",
-          "base-100": "#EDDDD4",
+          "neutral": "#A1DFFA",
+          "base-100": "#FFFFFF",
           "info": "#A1DFFA",
           "success": "#36D399",
           "warning": "#FBBD23",
