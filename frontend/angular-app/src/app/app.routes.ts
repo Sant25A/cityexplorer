@@ -6,6 +6,7 @@ import { Register } from './features/auth/pages/register/register';
 import { PlacesList } from './features/places/pages/places-list/places-list';
 import { FavoritesPage } from './features/favorites/pages/favorites-page/favorites-page';
 import { PlaceDetail } from './features/places/pages/place-detail/place-detail';
+import { CreatePlace } from './features/places/pages/create-place/create-place';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -17,6 +18,8 @@ export const routes: Routes = [
   { path: 'places/:id', component: PlaceDetail },
 
   { path: 'favorites', component: FavoritesPage },
+
+  { path: 'create-place', component: CreatePlace },
 
   { path: '**', redirectTo: '' }
 ];
