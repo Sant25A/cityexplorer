@@ -1,1 +1,88 @@
-<p>place-detail works!</p>
+<section class="space-y-10">
+
+  <!-- IMAGEN PRINCIPAL -->
+  <div class="relative">
+    <img 
+      [src]="place.image"
+      class="w-full h-[300px] md:h-[400px] object-cover rounded-xl shadow-lg"
+    />
+
+    <!-- FAVORITO -->
+    <button
+      (click)="toggleFavorite()"
+      class="absolute top-4 right-4 btn btn-circle bg-base-100/80 backdrop-blur border-none"
+    >
+      <span class="text-2xl">
+        {{ place.isFavorite ? '❤️' : '🤍' }}
+      </span>
+    </button>
+  </div>
+
+    <div class="space-y-3">
+    <h1 class="text-4xl font-bold text-primary">
+      {{ place.name }}
+    </h1>
+
+    <p class="opacity-70 flex items-center gap-2">
+      📍 {{ place.location }}
+    </p>
+
+    <div class="flex items-center gap-2 text-lg">
+      <span class="text-yellow-500">★</span>
+      {{ place.rating }}
+    </div>
+
+    <p class="mt-4 text-lg leading-relaxed opacity-80">
+      {{ place.description }}
+    </p>
+  </div>
+
+    <div class="space-y-6">
+
+    <h2 class="text-2xl font-semibold">
+      Reseñas
+    </h2>
+
+    <div class="space-y-4">
+      <div *ngFor="let review of reviews" class="card bg-base-100 shadow p-4">
+
+        <div class="flex justify-between">
+          <span class="font-bold">{{ review.user }}</span>
+          <span class="text-yellow-500">★ {{ review.rating }}</span>
+        </div>
+
+        <p class="mt-2 opacity-70">
+          {{ review.comment }}
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+
+    <div class="card bg-base-100 shadow-xl p-6 space-y-4">
+
+    <h3 class="text-xl font-semibold">
+      Agregar reseña
+    </h3>
+
+    <select [(ngModel)]="newReview.rating" class="select select-bordered w-full">
+      <option value="0">Selecciona rating</option>
+      <option *ngFor="let r of [1,2,3,4,5]" [value]="r">
+        {{ r }} estrellas
+      </option>
+    </select>
+
+    <textarea
+      [(ngModel)]="newReview.comment"
+      class="textarea textarea-bordered w-full"
+      placeholder="Escribe tu opinión..."
+    ></textarea>
+
+    <button (click)="addReview()" class="btn btn-primary">
+      Enviar reseña
+    </button>
+
+  </div>
+
+</section>
