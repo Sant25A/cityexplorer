@@ -12,7 +12,6 @@ const connectDB = async () => {
       console.error('🔴 Error: Usuario o contraseña incorrectos en el .env');
     } else {
       console.error('🔴 Error de RED/DNS: Tu internet está bloqueando la conexión a Atlas.');
-      console.error('👉 Intenta usar los DNS de Google (8.8.8.8) o conectarte a tus datos móviles.');
     }
     process.exit(1);
   }
