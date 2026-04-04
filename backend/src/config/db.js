@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Intentamos conectar con un tiempo de espera más corto para no esperar años
+    // Intentamos conectar con un tiempo de espera corto para detectar rápidamente problemas de red o credenciales
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 5000 
     });
