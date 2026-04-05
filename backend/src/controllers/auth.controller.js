@@ -73,14 +73,22 @@ exports.login = async (req, res) => {
       });
     }
 
-    // 4. Respuesta temporal (SIN JWT aún)
+    // 4. Generar JWT
+    const token = jwt.sign(
+        { id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    // Respuesta con token
     res.status(200).json({
-      message: 'Login exitoso',
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email
-      }
+        message: 'Login exitoso',
+        token,
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
     });
 
   } catch (error) {
