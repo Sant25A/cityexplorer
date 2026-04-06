@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const placeSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     name: {
       type: String,
       required: [true, 'El nombre es obligatorio'],
@@ -16,7 +21,18 @@ const placeSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, 'La categoría es obligatoria'],
-      enum: ['cafe', 'restaurante', 'parque', 'bar', 'otro'],
+      enum: [
+        'cafe',
+        'restaurante',
+        'parque',
+        'bar',
+        'museo',
+        'hotel',
+        'tienda',
+        'atraccion',
+        'naturaleza',
+        'otro'
+      ]
     },
     location: {
       type: String,
@@ -27,11 +43,6 @@ const placeSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    creator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
     averageRating: {
       type: Number,
       default: 0,

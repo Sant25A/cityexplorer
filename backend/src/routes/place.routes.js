@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+
 const protect = require('../middlewares/auth.middleware');
+const { createPlace } = require('../controllers/place.controller');
 
 // Obtener lugares (público)
 router.get('/', (req, res) => {
@@ -8,11 +10,6 @@ router.get('/', (req, res) => {
 });
 
 // Crear lugar (protegido)
-router.post('/', protect, (req, res) => {
-  res.json({
-    message: 'Lugar creado',
-    user: req.user
-  });
-});
+router.post('/', protect, createPlace);
 
 module.exports = router;
