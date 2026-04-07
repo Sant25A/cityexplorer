@@ -4,7 +4,7 @@ const protect = (req, res, next) => {
     try {
         let token;
 
-        //  1. Vericicar si hay header Authorization
+        //  1. Verificar si hay header Authorization
         if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
 
             // 2. Extraer token

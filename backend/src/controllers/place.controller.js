@@ -17,7 +17,7 @@ exports.createPlace = async (req, res) => {
             description,
             category,
             location,
-            user: req.user.id 
+            user: req.user.id
         });
 
         // 3. Guardar en DB
@@ -36,3 +36,29 @@ exports.createPlace = async (req, res) => {
         });
     }
 };
+
+exports.getPlaces = async (req, res) => {
+    try {
+        const { category } = req.query;
+
+        let filter = {};
+
+        if (category) {
+            filter.category = category;
+        }
+
+        const places = await Place.find(filter)
+            .populate('user', 'username');
+
+
+        res.status(200).json({
+            count: places.length,
+            places
+        })
+    } catch (error) {
+        console.error('Error al obtener lugares: ', error);
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+}
