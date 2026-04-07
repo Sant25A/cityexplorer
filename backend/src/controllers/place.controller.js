@@ -62,3 +62,37 @@ exports.getPlaces = async (req, res) => {
         });
     }
 }
+
+exports.getPlaceById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const place = await Place.findById(id)
+        .populate('user', 'username');
+
+        // Si no se encuentra el lugar
+        if (!place) {
+            return res.status(404).json({
+                message: 'Lugar no encontrado'
+            });
+        }
+
+        // Respuesta
+        res.status(200).json({
+            place
+        });
+    } catch (error) {
+        console.error('Error al obtener lugar: ', error);
+
+        // ID inválido
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                message: 'ID inválido'
+            });
+        }
+
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+};
