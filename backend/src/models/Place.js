@@ -36,6 +36,7 @@ const placeSchema = new mongoose.Schema(
     },
     location: {
       type: String,
+      trim: true,
       required: [true, 'La ubicación es obligatoria'],
     },
     images: [
