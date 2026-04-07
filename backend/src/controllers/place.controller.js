@@ -71,7 +71,7 @@ exports.getPlaceById = async (req, res) => {
         const { id } = req.params;
 
         const place = await Place.findById(id)
-        .populate('user', 'username');
+            .populate('user', 'username');
 
         // Si no se encuentra el lugar
         if (!place) {
@@ -138,7 +138,49 @@ exports.updatePlace = async (req, res) => {
         });
     } catch (error) {
         console.error('Error al actualizar lugar: ', error);
-        
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                message: 'ID inválido'
+            });
+        }
+
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+};
+
+// Eliminar lugar
+exports.deletePlace = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Buscar lugar
+        const place = await Place.findById(id);
+
+        if (!place) {
+            return res.status(404).json({
+                message: 'Lugar no encontrado'
+            });
+        }
+
+        // 2. Validar dueño
+        if (place.user.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'No tienes permiso para eliminar este lugar'
+            });
+        }
+
+        // 3. Eliminar
+        await place.deleteOne();
+
+        res.status(200).json({
+            message: 'Lugar eliminado correctamente'
+        });
+    } catch (error) {
+        console.error('Error al eliminar lugar: ', error);
+
         if (error.name === 'CastError') {
             return res.status(400).json({
                 message: 'ID inválido'

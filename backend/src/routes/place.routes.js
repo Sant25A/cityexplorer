@@ -2,7 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const protect = require('../middlewares/auth.middleware');
-const { createPlace, getPlaces, getPlaceById, updatePlace } = require('../controllers/place.controller');
+const { 
+  createPlace, 
+  getPlaces, 
+  getPlaceById, 
+  updatePlace,
+  deletePlace 
+} = require('../controllers/place.controller');
 
 // Obtener lugares (público)
 router.get('/', getPlaces);
@@ -15,5 +21,8 @@ router.put('/:id', protect, updatePlace);
 
 // Crear lugar (protegido)
 router.post('/', protect, createPlace);
+
+// Eliminar lugar (protegido)
+router.delete('/:id', protect, deletePlace);
 
 module.exports = router;
