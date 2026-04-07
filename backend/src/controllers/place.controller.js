@@ -1,5 +1,6 @@
 const Place = require('../models/Place');
 
+// Crear nuevo lugar
 exports.createPlace = async (req, res) => {
     try {
         const { name, description, category, location } = req.body;
@@ -37,6 +38,7 @@ exports.createPlace = async (req, res) => {
     }
 };
 
+// Obtener lugares (con filtro opcional por categoría)
 exports.getPlaces = async (req, res) => {
     try {
         const { category } = req.query;
@@ -63,6 +65,7 @@ exports.getPlaces = async (req, res) => {
     }
 }
 
+// Buscar lugar por ID
 exports.getPlaceById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -85,6 +88,57 @@ exports.getPlaceById = async (req, res) => {
         console.error('Error al obtener lugar: ', error);
 
         // ID inválido
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                message: 'ID inválido'
+            });
+        }
+
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+};
+
+// Actualización de lugar
+exports.updatePlace = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Buscar el lugar
+        const place = await Place.findById(id);
+
+        if (!place) {
+            return res.status(404).json({
+                message: 'Lugar no encontrado'
+            });
+        }
+
+        // 2. Verificar que el usuario sea el dueño
+        if (place.user.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: 'No tienes permiso para actualizar este lugar'
+            });
+        }
+
+        // 3. Actualizar campos permitidos
+        const { name, description, category, location } = req.body;
+
+        if (name) place.name = name;
+        if (description) place.description = description;
+        if (category) place.category = category;
+        if (location) place.location = location;
+
+        // 4. Guardar cambios
+        const updatedPlace = await place.save();
+
+        res.status(200).json({
+            message: 'Lugar actualizado correctamente',
+            place: updatedPlace
+        });
+    } catch (error) {
+        console.error('Error al actualizar lugar: ', error);
+        
         if (error.name === 'CastError') {
             return res.status(400).json({
                 message: 'ID inválido'
