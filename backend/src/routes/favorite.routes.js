@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Lista de favoritos' });
-});
+const protect = require('../middlewares/auth.middleware');
+const {
+    toggleFavorite,
+    getFavorites
+} = require('../controllers/favorite.controller');
 
-router.post('/', (req, res) => {
-  res.json({ message: 'Agregar favorito' });
-});
+// Obtener favoritos del usuario
+router.get('/', protect, getFavorites);
+
+// Toggle favorito
+router.post('/', protect, toggleFavorite);
 
 module.exports = router;
