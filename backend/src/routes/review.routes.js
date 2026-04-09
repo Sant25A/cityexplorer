@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Lista de reviews' });
-});
+const protect = require('../middlewares/auth.middleware');
+const {
+  createReview,
+  getReviewsByPlace
+} = require('../controllers/review.controller');
 
-router.post('/', (req, res) => {
-  res.json({ message: 'Crear review' });
-});
+// Obtener reviews de un lugar
+router.get('/:placeId', getReviewsByPlace);
+
+// Crear review (protegido)
+router.post('/', protect, createReview);
 
 module.exports = router;

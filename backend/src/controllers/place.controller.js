@@ -69,7 +69,6 @@ exports.getPlaces = async (req, res) => {
         }
 
         // Busqueda por texto
-        // 🔍 BÚSQUEDA POR TEXTO
         if (search) {
             filter.$or = [
                 { name: { $regex: search, $options: 'i' } },
