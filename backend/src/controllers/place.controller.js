@@ -70,11 +70,7 @@ exports.getPlaces = async (req, res) => {
 
         // Busqueda por texto
         if (search) {
-            filter.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
-                { location: { $regex: search, $options: 'i' } }
-            ];
+            filter.$text = { $search: search };
         }
 
         // Paginación
@@ -96,10 +92,12 @@ exports.getPlaces = async (req, res) => {
         }
 
         const places = await Place.find(filter)
+            .select('name description category location averageRating createdAt')
             .populate('user', 'username')
             .sort(sortOption)
             .skip(skip)
-            .limit(limitNumber);
+            .limit(limitNumber)
+            .lean();
 
         const total = await Place.countDocuments(filter);
 

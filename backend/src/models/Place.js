@@ -39,6 +39,20 @@ const placeSchema = new mongoose.Schema(
       trim: true,
       required: [true, 'La ubicación es obligatoria'],
     },
+    // location: {
+    //   name: {
+    //     type: String,
+    //     required: true,
+    //   },
+    //   lat: {
+    //     type: Number,
+    //     required: true,
+    //   },
+    //   lng: {
+    //     type: Number,
+    //     required: true,
+    //   }
+    // },
     images: [
       {
         type: String,
@@ -55,5 +69,17 @@ const placeSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Búsqueda de texto
+placeSchema.index({
+  name: 'text',
+  description: 'text',
+  location: 'text'
+});
+
+// Filtros y ordenamiento
+placeSchema.index({ category: 1 });
+placeSchema.index({ createdAt: -1 });
+placeSchema.index({ averageRating: -1 });
 
 module.exports = mongoose.model('Place', placeSchema);
