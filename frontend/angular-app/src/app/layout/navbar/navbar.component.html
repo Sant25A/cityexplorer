@@ -1,41 +1,37 @@
 <nav class="navbar bg-base-100 border-b-4 border-secondary/20 px-6">
   <div class="flex-1">
     <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold text-primary">
-      <img src="images/CityExplorer.png" alt="Logo CityExplorer" class="w-11 h-10 object-contain" />
+      <img src="images/CityExplorer.png" alt="Logo" class="w-11 h-10 object-contain" />
       <span>CityExplorer</span>
     </a>
   </div>
 
   <div class="flex-none gap-2">
-    <a
-      routerLink="/"
-      routerLinkActive="text-primary font-bold bg-primary/10"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="btn btn-ghost"
-      >Inicio</a
-    >
 
-    <a
-      routerLink="/places"
-      routerLinkActive="text-primary font-bold bg-primary/10"
-      class="btn btn-ghost"
-      >Lugares</a
-    >
+    <!-- Siempre visibles -->
+    <a routerLink="/" class="btn btn-ghost">Inicio</a>
+    <a routerLink="/places" class="btn btn-ghost">Lugares</a>
 
-    <a
-      routerLink="/favorites"
-      routerLinkActive="text-primary font-bold bg-primary/10"
-      class="btn btn-ghost"
-      >Favoritos</a
-    >
+    <!-- SOLO LOGUEADO -->
+    <ng-container *ngIf="isLoggedIn">
+      <a routerLink="/favorites" class="btn btn-ghost">Favoritos</a>
+      <a routerLink="/create-place" class="btn btn-ghost">Crear lugar</a>
 
-    <a
-      routerLink="/create-place"
-      routerLinkActive="text-primary font-bold bg-primary/10"
-      class="btn btn-ghost"
-      >Crear lugar</a
-    >
+      <!-- Usuario -->
+      <span class="ml-2 font-semibold text-primary">
+        👋 {{ user?.username }}
+      </span>
 
-    <a routerLink="/login" class="btn btn-primary btn-sm ml-2">Login</a>
+      <!-- Logout -->
+      <button (click)="logout()" class="btn btn-error btn-sm ml-2">
+        Logout
+      </button>
+    </ng-container>
+
+    <!-- SOLO NO LOGUEADO -->
+    <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="btn btn-primary btn-sm ml-2">Login</a>
+    </ng-container>
+
   </div>
 </nav>

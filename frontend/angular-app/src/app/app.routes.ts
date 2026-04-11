@@ -8,6 +8,8 @@ import { FavoritesPage } from './features/favorites/pages/favorites-page/favorit
 import { PlaceDetail } from './features/places/pages/place-detail/place-detail';
 import { CreatePlace } from './features/places/pages/create-place/create-place';
 
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
   { path: '', component: Home },
 
@@ -17,9 +19,9 @@ export const routes: Routes = [
   { path: 'places', component: PlacesList },
   { path: 'places/:id', component: PlaceDetail },
 
-  { path: 'favorites', component: FavoritesPage },
+  { path: 'favorites', component: FavoritesPage, canActivate: [authGuard] },
 
-  { path: 'create-place', component: CreatePlace },
+  { path: 'create-place', component: CreatePlace, canActivate: [authGuard] },
 
   { path: '**', redirectTo: '' }
 ];

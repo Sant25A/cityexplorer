@@ -7,7 +7,8 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -17,13 +18,12 @@ import { RouterModule } from '@angular/router';
   styleUrl: './register.css',
 })
 export class Register {
-  // Usamos inject() para evitar el error de inicialización
   private fb = inject(FormBuilder);
 
   submitted = false;
 
-  // Definimos el formulario
-  form = this.fb.group(
+  form = this.fb.nonNullable.group(
+    // <-- Agregamos .nonNullable
     {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -31,20 +31,39 @@ export class Register {
       confirmPassword: ['', Validators.required],
     },
     {
-      validators: this.passwordMatchValidator, // Validador personalizado
+      validators: this.passwordMatchValidator,
     },
   );
 
-  // El validador debe ser una función que reciba el grupo
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
+
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
+
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onSubmit() {
     this.submitted = true;
+
     if (this.form.invalid) return;
-    console.log('Registro válido:', this.form.value);
+
+    // Con getRawValue() obtenemos los valores con el tipo correcto (string)
+    const { username, email, password } = this.form.getRawValue();
+
+    this.auth.register({ username, email, password }).subscribe({
+      next: () => {
+        console.log('Registro exitoso 🚀');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Error registro:', err);
+        alert('Error al registrar usuario');
+      },
+    });
   }
 }

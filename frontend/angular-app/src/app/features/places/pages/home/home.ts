@@ -21,15 +21,15 @@ export class Home implements OnInit { // Implementamos OnInit
   ];
 
   ngOnInit() {
-    console.log('Iniciando prueba de conexión...');
+    console.log('🚀 Iniciando prueba de conexión...');
     
     // Llamada a la ruta que configuramos en el backend: /api/places
     this.api.get('places').subscribe({
       next: (res) => {
-        console.log('¡Conexión exitosa! Respuesta del backend:', res);
+        console.log('✅ ¡Conexión exitosa! Respuesta del backend:', res);
       },
       error: (err) => {
-        console.error('Error en la conexión:', err);
+        console.error('❌ Error en la conexión:', err);
       }
     });
   }

@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private api: ApiService) {}
 
   login(data: { email: string; password: string }) {
-    return this.api.post('/auth/login', data).pipe(
+    return this.api.post('auth/login', data).pipe(
       tap((res: any) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   register(data: { username: string; email: string; password: string }) {
-    return this.api.post('/auth/register', data);
+    return this.api.post('auth/register', data);
   }
 
   logout() {
@@ -26,7 +26,7 @@ export class AuthService {
     localStorage.removeItem('user');
   }
 
-  isAutenticated(): boolean {
+  isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   }
 
