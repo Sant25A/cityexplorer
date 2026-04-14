@@ -1,57 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
+import { PlaceService } from '../../../../core/services/place.service';
+import { Place } from '../../../../shared/models/place.model';
 
 @Component({
   selector: 'app-places-list',
+  standalone: true,
   imports: [CommonModule, FormsModule, PlaceCard],
   templateUrl: './places-list.html',
   styleUrl: './places-list.css',
 })
 export class PlacesList {
+  private placeService = inject(PlaceService);
+  private cdr = inject(ChangeDetectorRef);
+
+  // Variables para filtros
   search = '';
   selectedCity = '';
   selectedCategory = '';
 
-  places = [
-    {
-      id: 1,
-      name: 'Café Central',
-      location: 'CDMX',
-      category: 'Café',
-      rating: 4.5,
-      image: 'https://picsum.photos/400/300?1',
-      isFavorite: false,
-    },
-    {
-      id: 2,
-      name: 'Parque México',
-      location: 'CDMX',
-      category: 'Parque',
-      rating: 4.7,
-      image: 'https://picsum.photos/400/300?2',
-      isFavorite: false,
-    },
-    {
-      id: 3,
-      name: 'Museo Frida Kahlo',
-      location: 'CDMX',
-      category: 'Museo',
-      rating: 4.8,
-      image: 'https://picsum.photos/400/300?3',
-      isFavorite: false,
-    },
-    {
-      id: 4,
-      name: 'Restaurante Azul',
-      location: 'CDMX',
-      category: 'Restaurante',
-      rating: 4.6,
-      image: 'https://picsum.photos/400/300?4',
-      isFavorite: false,
-    },
-  ];
+  places: Place[] = [];
+  loading = true;
+
+  ngOnInit() {
+    this.fetchPlaces();
+  }
+
+  fetchPlaces() {
+    this.loading = true;
+
+    const params: any = {
+      search: this.search,
+      location: this.selectedCity,
+      category: this.selectedCategory,
+    };
+
+    this.placeService.getPlaces(params).subscribe({
+      next: (res) => {
+        console.log('✅ Datos recibidos en PlacesList:', res.places);
+        this.places = res.places;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching places:', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  applyFilters() {
+    this.fetchPlaces();
+  }
 
   onToggleFavorite(place: any) {
     place.isFavorite = !place.isFavorite;

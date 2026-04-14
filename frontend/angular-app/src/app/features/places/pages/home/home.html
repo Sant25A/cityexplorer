@@ -57,7 +57,20 @@
     ></div>
   </div>
 
+  <!-- <div *ngIf="loading" class="text-center py-10">Cargando lugares...</div> -->
+
+  <!-- <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-place-card *ngFor="let place of places" [place]="place"></app-place-card>
+  </div> -->
+  <!--   
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
     <app-place-card *ngFor="let p of places" [place]="p" (toggleFavorite)="onToggleFavorite($event)"> </app-place-card>
+  </div> -->
+  <div *ngIf="loading" class="flex justify-center my-10">
+    <span class="loading loading-dots loading-lg text-primary"></span>
+  </div>
+
+  <div *ngIf="!loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+    <app-place-card *ngFor="let p of places" [place]="p" (toggleFavorite)="onToggleFavorite($event)"></app-place-card>
   </div>
 </section>

@@ -10,8 +10,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  get(endpoint: string) {
-    return this.http.get(`${this.baseUrl}/${endpoint}`);
+  get(endpoint: string, params: any = {}) {
+    return this.http.get(`${this.baseUrl}/${endpoint}`, { params });
   }
 
   post(endpoint: string, body: any) {

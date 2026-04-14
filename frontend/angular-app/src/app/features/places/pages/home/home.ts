@@ -1,38 +1,42 @@
-import { Component, OnInit, inject } from '@angular/core'; // Añadimos OnInit e inject
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // Agregué ChangeDetectorRef por si acaso
+import { PlaceService } from '../../../../core/services/place.service';
 import { CommonModule } from '@angular/common';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
-import { ApiService } from '../../../../core/services/api.service'; // Importamos tu nuevo servicio
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PlaceCard], 
+  imports: [CommonModule, PlaceCard],
   templateUrl: './home.html',
-  styleUrl: './home.css',
 })
-export class Home implements OnInit { // Implementamos OnInit
-  // Usamos inject que es más moderno para Angular 17/18
-  private api = inject(ApiService);
+export class Home implements OnInit {
+  private placeService = inject(PlaceService);
+  private cdr = inject(ChangeDetectorRef); // Para forzar que se pinte la pantalla
 
-  places = [
-    { id: 1, name: "Cafetería punta del cielo", location: "Tollocan", image: "https://picsum.photos/300/200?1", rating: 4.5 },
-    { id: 2, name: "Alameda central", location: "Toluca Centro", image: "https://picsum.photos/300/200?2", rating: 4.7 },
-    { id: 3, name: "Centro Tolzú", location: "Toluca Centro", image: "https://picsum.photos/300/200?3", rating: 4.8 }
-  ];
+  places: any[] = [];
+  loading = true;
 
   ngOnInit() {
-    console.log('🚀 Iniciando prueba de conexión...');
-    
-    // Llamada a la ruta que configuramos en el backend: /api/places
-    this.api.get('places').subscribe({
-      next: (res) => {
-        console.log('✅ ¡Conexión exitosa! Respuesta del backend:', res);
-      },
-      error: (err) => {
-        console.error('❌ Error en la conexión:', err);
-      }
-    });
+    this.loadPlaces();
   }
+
+  loadPlaces() {
+    console.log('Solicitando lugares...');
+    this.placeService.getPlaces({ limit: 6, sort: 'rating' })
+      .subscribe({
+        next: (res) => {
+          console.log('✅ Datos recibidos en el componente:', res.places);
+          this.places = res.places;
+          this.loading = false;
+          this.cdr.detectChanges(); // Esto obliga a Angular a quitar los puntitos y poner las cards
+        },
+        error: (err) => {
+          console.error('❌ Error en el componente:', err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      });
+  } 
 
   onToggleFavorite(place: any) {
     place.isFavorite = !place.isFavorite;
