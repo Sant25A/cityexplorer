@@ -1,39 +1,64 @@
-<section class="max-w-5xl mx-auto pb-20 animate-fade-in-up">
+<div *ngIf="loading()" class="flex flex-col items-center justify-center py-40 animate-pulse">
+  <span class="loading loading-spinner loading-lg text-primary"></span>
+  <p class="mt-4 font-bold opacity-50 tracking-widest uppercase text-xs">Cargando lugar...</p>
+</div>
 
+<section *ngIf="!loading() && place()" class="max-w-5xl mx-auto pb-20 animate-fade-in">
   <div class="relative group">
-    <img 
-      [src]="place.image"
-      class="w-full h-[350px] md:h-[500px] object-cover rounded-3xl shadow-2xl transition-transform duration-700"
-      alt="Imagen del lugar"
+    <img
+      [src]="selectedImage()"
+      class="w-full h-[350px] md:h-[500px] object-cover rounded-3xl shadow-2xl transition-all duration-500"
+      alt="Imagen principal"
     />
-    
-    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
+
+    <div
+      *ngIf="place()?.images?.length! > 1"
+      class="flex gap-3 mt-4 overflow-x-auto pb-2 px-1 scrollbar-hide"
+    >
+      <div
+        *ngFor="let img of place()?.images"
+        (click)="selectedImage.set(img)"
+        class="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-300"
+        [ngClass]="
+          selectedImage() === img
+            ? 'border-primary scale-105 shadow-md'
+            : 'border-transparent opacity-70 hover:opacity-100'
+        "
+      >
+        <img [src]="img" class="w-20 h-20 md:w-24 md:h-24 object-cover" alt="Miniatura" />
+      </div>
+    </div>
 
     <button
       (click)="toggleFavorite()"
-      class="absolute top-6 right-6 btn btn-circle bg-base-100/90 backdrop-blur-md border-none shadow-lg hover:scale-110 transition-all"
+      class="absolute top-6 right-6 btn btn-circle bg-base-100/90 backdrop-blur-md border-none shadow-lg hover:scale-110 transition-all z-10"
     >
-      <span class="text-2xl">
-        {{ place.isFavorite ? '❤️' : '🤍' }}
-      </span>
+      <span class="text-2xl">{{ place()?.isFavorite ? '❤️' : '🤍' }}</span>
     </button>
   </div>
 
   <div class="mt-8 px-2 grid grid-cols-1 md:grid-cols-3 gap-10">
-    
     <div class="md:col-span-2 space-y-6">
       <div class="flex flex-col gap-2">
-        <div class="badge badge-secondary font-bold px-4 py-3 uppercase tracking-widest text-[10px]">Destacado</div>
-        <h1 class="text-5xl font-black text-primary tracking-tight">{{ place.name }}</h1>
-        
+        <div
+          class="badge badge-secondary font-bold px-4 py-3 uppercase tracking-widest text-[10px]"
+        >
+          {{ place()?.category }}
+        </div>
+        <h1 class="text-5xl font-black text-primary tracking-tight">{{ place()?.name }}</h1>
+
         <div class="flex items-center gap-6 mt-2">
-          <p class="flex items-center gap-2 font-medium opacity-70">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            {{ place.location }}
-          </p>
+          <p class="flex items-center gap-2 font-medium opacity-70">📍 {{ place()?.location }}</p>
+
+          <!-- <div *ngIf="place()?.lat && place()?.lng" class="mt-6">
+            <div class="h-64 bg-base-200 rounded-xl flex items-center justify-center">
+              🗺️ Aquí irá el mapa (Google Maps / Leaflet)
+            </div>
+          </div> -->
+
           <div class="flex items-center gap-1 badge badge-outline border-primary/20 p-3">
             <span class="text-yellow-500 font-bold">★</span>
-            <span class="font-bold">{{ place.rating }}</span>
+            <span class="font-bold">{{ place()?.rating }}</span>
           </div>
         </div>
       </div>
@@ -43,34 +68,25 @@
       <div>
         <h2 class="text-xl font-bold mb-3">Sobre este lugar</h2>
         <p class="text-lg leading-relaxed opacity-80 font-light">
-          {{ place.description }}
+          {{ place()?.description }}
         </p>
       </div>
 
       <div class="pt-10">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-2xl font-black">Reseñas de la comunidad</h2>
-          <span class="badge badge-primary">{{ reviews.length }} comentarios</span>
-        </div>
-
+        <h2 class="text-2xl font-black mb-8">Reseñas de la comunidad ({{ reviews().length }})</h2>
         <div class="space-y-6">
-          <div *ngFor="let review of reviews" class="flex gap-4 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm hover:shadow-md transition-shadow">
+          <div
+            *ngFor="let review of reviews()"
+            class="flex gap-4 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm"
+          >
             <div class="avatar placeholder">
               <div class="bg-neutral text-neutral-content rounded-full w-12 h-12">
-                <span class="text-xl uppercase">{{ review.user.substring(0,1) }}</span>
+                <span class="text-xl uppercase">{{ review.user.substring(0, 1) }}</span>
               </div>
             </div>
-            
-            <div class="flex-grow">
-              <div class="flex justify-between items-start">
-                <span class="font-black text-lg">{{ review.user }}</span>
-                <div class="rating rating-xs">
-                  <input *ngFor="let i of [1,2,3,4,5]" type="radio" class="mask mask-star-2 bg-yellow-400" [checked]="review.rating === i" disabled />
-                </div>
-              </div>
-              <p class="mt-2 text-sm opacity-70 leading-relaxed italic">
-                "{{ review.comment }}"
-              </p>
+            <div>
+              <span class="font-black text-lg">{{ review.user }}</span>
+              <p class="mt-2 text-sm opacity-70 italic">"{{ review.comment }}"</p>
             </div>
           </div>
         </div>
@@ -78,44 +94,52 @@
     </div>
 
     <div class="md:col-span-1">
-      <div class="sticky top-24 card bg-base-100 shadow-2xl border border-primary/5">
-        <div class="card-body p-8">
-          <h3 class="card-title text-xl font-black mb-4">¿Ya lo visitaste?</h3>
-          <p class="text-sm opacity-60 mb-6">Comparte tu experiencia con otros exploradores.</p>
+      <div class="sticky top-24 card bg-base-100 shadow-2xl border border-primary/5 p-8">
+        <h3 class="card-title text-xl font-black mb-4">¿Ya lo visitaste?</h3>
+        <p class="text-sm opacity-60 mb-6">Comparte tu experiencia con otros exploradores.</p>
 
-          <div class="space-y-4">
-            <div class="form-control">
-              <label class="label font-bold text-xs opacity-70 uppercase tracking-widest">Tu calificación</label>
-              <div class="rating rating-lg gap-1 justify-center py-2">
-                <input *ngFor="let r of [1,2,3,4,5]" 
-                       type="radio" 
-                       name="rating-form" 
-                       class="mask mask-star-2 bg-yellow-400" 
-                       (click)="newReview.rating = r"
-                       [checked]="newReview.rating === r" />
-              </div>
-            </div>
-
-            <div class="form-control">
-              <label class="label font-bold text-xs opacity-70 uppercase tracking-widest">Tu opinión</label>
-              <textarea
-                [(ngModel)]="newReview.comment"
-                class="textarea textarea-bordered h-32 focus:textarea-primary transition-all bg-base-200/30"
-                placeholder="Cuéntanos los detalles..."
-              ></textarea>
-            </div>
-
-            <button 
-              (click)="addReview()" 
-              class="btn btn-primary btn-block shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all mt-4"
-              [disabled]="!newReview.comment || newReview.rating === 0"
+        <div class="space-y-4">
+          <div class="form-control">
+            <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
+              >Tu calificación</label
             >
-              Publicar reseña
-            </button>
+            <div class="rating rating-lg gap-1 justify-center py-2">
+              <input
+                *ngFor="let r of [1, 2, 3, 4, 5]"
+                type="radio"
+                name="rating-form"
+                class="mask mask-star-2 bg-yellow-400"
+                (click)="newReview.rating = r"
+                [checked]="newReview.rating === r"
+              />
+            </div>
           </div>
+
+          <div class="form-control">
+            <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
+              >Tu opinión</label
+            >
+            <textarea
+              [(ngModel)]="newReview.comment"
+              class="textarea textarea-bordered h-32 focus:textarea-primary transition-all bg-base-200/30"
+              placeholder="Cuéntanos los detalles de tu visita..."
+            ></textarea>
+          </div>
+
+          <button
+            (click)="addReview()"
+            class="btn btn-primary btn-block shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all mt-4"
+            [disabled]="!newReview.comment || newReview.rating === 0"
+          >
+            Publicar reseña
+          </button>
         </div>
       </div>
     </div>
-
   </div>
 </section>
+
+<div *ngIf="!loading() && !place()" class="text-center py-40">
+  <h2 class="text-3xl font-black">Ups, no encontramos este lugar 🏜️</h2>
+  <a routerLink="/places" class="btn btn-primary mt-8">Volver a explorar</a>
+</div>

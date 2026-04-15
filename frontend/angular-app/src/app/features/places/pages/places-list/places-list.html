@@ -1,37 +1,77 @@
-<section class="space-y-8">
-  <!-- BUSCADOR -->
+<section class="space-y-8 animate-fade-in">
+  
+  <div class="flex flex-col md:flex-row gap-4 bg-base-200 p-6 rounded-2xl shadow-sm">
+    <div class="relative w-full">
+      <input
+        [(ngModel)]="search"
+        (keyup.enter)="applyFilters()"
+        type="text"
+        placeholder="¿Qué estás buscando? (ej: café, museo...)"
+        class="input input-bordered w-full pl-10"
+      />
+      <span class="absolute left-3 top-3 opacity-40">🔍</span>
+    </div>
+
+    <button (click)="applyFilters()" class="btn btn-primary px-10 shadow-lg shadow-primary/20">
+      Buscar
+    </button>
+  </div>
+
   <div class="flex flex-col md:flex-row gap-4">
-    <input
-      [(ngModel)]="search"
-      type="text"
-      placeholder="Buscar lugares..."
-      class="input input-bordered w-full"
-    />
+    <div class="w-full">
+      <label class="label opacity-60 text-xs font-bold uppercase tracking-widest">Ciudad</label>
+      <select [(ngModel)]="selectedCity" (change)="applyFilters()" class="select select-bordered w-full">
+        <option value="">Todas las ciudades</option>
+        <option value="CDMX">Ciudad de México</option>
+        <option value="Toluca">Toluca</option>
+      </select>
+    </div>
 
-    <button class="btn btn-primary">Buscar</button>
+    <div class="w-full">
+      <label class="label opacity-60 text-xs font-bold uppercase tracking-widest">Categoría</label>
+      <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="select select-bordered w-full">
+        <option value="">Todas las categorías</option>
+        <option value="cafe">Café</option>
+        <option value="restaurante">Restaurante</option>
+        <option value="parque">Parque</option>
+        <option value="bar">Bar</option>
+        <option value="museo">Museo</option>
+        <option value="hotel">Hotel</option>
+        <option value="tienda">Tienda</option>
+        <option value="atraccion">Atracción</option>
+        <option value="naturaleza">Naturaleza</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
   </div>
 
-  <!-- FILTROS -->
-  <div class="flex flex-col md:flex-row gap-4">
-    <select [(ngModel)]="selectedCity" class="select select-bordered w-full">
-      <option value="">Todas las ciudades</option>
-      <option>CDMX</option>
-      <option>Guadalajara</option>
-    </select>
+  <hr class="opacity-10" />
 
-    <select [(ngModel)]="selectedCategory" class="select select-bordered w-full">
-      <option value="">Todas las categorías</option>
-      <option>Café</option>
-      <option>Parque</option>
-      <option>Museo</option>
-      <option>Restaurante</option>
-    </select>
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20">
+    <span class="loading loading-dots loading-lg text-primary"></span>
+    <p class="mt-4 opacity-50 italic">Buscando los mejores lugares para ti...</p>
   </div>
 
-  <!-- GRID -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    <app-place-card *ngFor="let place of places" [place]="place" (toggleFavorite)="onToggleFavorite($event)"></app-place-card>
+  <div *ngIf="!loading">
+    <div *ngIf="places.length > 0; else noResults" 
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <app-place-card 
+        *ngFor="let place of places" 
+        [place]="place" 
+        (toggleFavorite)="onToggleFavorite($event)">
+      </app-place-card>
+    </div>
   </div>
 
-  <p *ngIf="places.length === 0" class="text-center opacity-60">No se encontraron lugares</p>
+  <ng-template #noResults>
+    <div class="text-center py-20 bg-base-200/50 rounded-3xl border-2 border-dashed border-base-300">
+      <div class="text-6xl mb-4">🏜️</div>
+      <h3 class="text-xl font-bold opacity-70">No encontramos resultados</h3>
+      <p class="opacity-50">Intenta cambiar los filtros o el texto de búsqueda.</p>
+      <button (click)="search=''; selectedCategory=''; applyFilters();" class="btn btn-ghost btn-sm mt-4 text-primary">
+        Limpiar filtros
+      </button>
+    </div>
+  </ng-template>
+
 </section>

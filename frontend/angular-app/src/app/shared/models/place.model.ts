@@ -4,10 +4,8 @@ export interface Place {
     description: string;
     category: string;
     location: string;
-    // location: {
-    //     latitude: number;
-    //     longitude: number;
-    // };
+    // lat?: number;
+    // lng?: number;
     images: string[];
     averageRating: number;
 

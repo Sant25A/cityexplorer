@@ -19,8 +19,17 @@ export class PlaceService {
     );
   }
 
+  // En place.service.ts
   getPlaceById(id: string) {
-    return this.api.get(`/places/${id}`).pipe(map((res: any) => this.mapPlace(res.place)));
+    return this.api
+      .get(`places/${id}`) // Sin la diagonal al inicio
+      .pipe(
+        map((res: any) => {
+          // Imprime esto para estar 100% seguros de qué manda el backend
+          console.log('Respuesta cruda del backend id:', res);
+          return this.mapPlace(res.place); // Extraemos la propiedad 'place'
+        }),
+      );
   }
 
   private mapPlace(place: any) {
@@ -30,6 +39,8 @@ export class PlaceService {
       description: place.description,
       category: place.category,
       location: place.location,
+      lat: place.lat || null,
+      lng: place.lng || null,
       images: place.images,
       averageRating: place.averageRating,
 
