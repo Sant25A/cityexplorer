@@ -77,16 +77,84 @@
         <div class="space-y-6">
           <div
             *ngFor="let review of reviews()"
-            class="flex gap-4 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm"
+            class="flex gap-4 p-6 rounded-2xl border transition-all duration-300"
+            [ngClass]="
+              isMyReview(review)
+                ? 'bg-primary/5 border-primary shadow-md'
+                : 'bg-base-100 border-base-300'
+            "
           >
             <div class="avatar placeholder">
               <div class="bg-neutral text-neutral-content rounded-full w-12 h-12">
-                <span class="text-xl uppercase">{{ review.user.substring(0, 1) }}</span>
+                <span class="text-xl uppercase">{{ review.user?.username?.substring(0, 1) }}</span>
               </div>
             </div>
-            <div>
-              <span class="font-black text-lg">{{ review.user }}</span>
-              <p class="mt-2 text-sm opacity-70 italic">"{{ review.comment }}"</p>
+
+            <div class="flex-grow">
+              <div class="flex justify-between items-start">
+                <span class="font-black text-lg">
+                  {{ review.user?.username }}
+                  <span
+                    *ngIf="isMyReview(review)"
+                    class="badge badge-primary badge-xs ml-2 text-[8px]"
+                    >TÚ</span
+                  >
+                </span>
+
+                <div class="rating rating-xs">
+                  <span class="text-yellow-500 mr-1">★</span>
+                  <span class="font-bold">{{ review.rating }}</span>
+                </div>
+              </div>
+
+              <div
+                *ngIf="editingReviewId() === review._id; else viewMode"
+                class="mt-3 animate-fade-in"
+              >
+                <div class="rating rating-sm mb-2">
+                  <input
+                    *ngFor="let r of [1, 2, 3, 4, 5]"
+                    type="radio"
+                    class="mask mask-star-2 bg-yellow-400"
+                    (click)="editReviewData().rating = r"
+                    [checked]="editReviewData().rating === r"
+                  />
+                </div>
+                <textarea
+                  [(ngModel)]="editReviewData().comment"
+                  class="textarea textarea-bordered w-full text-sm h-20"
+                ></textarea>
+                <div class="flex gap-2 mt-2">
+                  <button (click)="saveEdit(review._id)" class="btn btn-xs btn-primary">
+                    Guardar
+                  </button>
+                  <button (click)="editingReviewId.set(null)" class="btn btn-xs btn-ghost">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+
+              <ng-template #viewMode>
+                <p class="mt-2 text-sm opacity-70 italic">"{{ review.comment }}"</p>
+
+                <div
+                  *ngIf="isMyReview(review) && editingReviewId() === null"
+                  class="flex gap-4 mt-3 pt-3 border-t border-base-300/50"
+                >
+                  <button
+                    (click)="startEdit(review)"
+                    class="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>✏️</span> Editar
+                  </button>
+                  <button
+                    (click)="deleteReview(review._id)"
+                    class="text-xs font-bold text-error hover:underline flex items-center gap-1"
+                  >
+                    <span>🗑️</span> Eliminar
+                  </button>
+                </div>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -96,48 +164,70 @@
     <div class="md:col-span-1">
       <div class="sticky top-24 card bg-base-100 shadow-2xl border border-primary/5 p-8">
         <h3 class="card-title text-xl font-black mb-4">¿Ya lo visitaste?</h3>
-        <p class="text-sm opacity-60 mb-6">Comparte tu experiencia con otros exploradores.</p>
 
-        <div class="space-y-4">
-          <div class="form-control">
-            <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
-              >Tu calificación</label
-            >
-            <div class="rating rating-lg gap-1 justify-center py-2">
-              <input
-                *ngFor="let r of [1, 2, 3, 4, 5]"
-                type="radio"
-                name="rating-form"
-                class="mask mask-star-2 bg-yellow-400"
-                (click)="newReview.rating = r"
-                [checked]="newReview.rating === r"
-              />
-            </div>
-          </div>
-
-          <div class="form-control">
-            <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
-              >Tu opinión</label
-            >
-            <textarea
-              [(ngModel)]="newReview.comment"
-              class="textarea textarea-bordered h-32 focus:textarea-primary transition-all bg-base-200/30"
-              placeholder="Cuéntanos los detalles de tu visita..."
-            ></textarea>
-          </div>
-
-          <button
-            (click)="addReview()"
-            class="btn btn-primary btn-block shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all mt-4"
-            [disabled]="!newReview.comment || newReview.rating === 0"
+        <div *ngIf="isLoggedIn(); else loginMessage">
+          <div
+            *ngIf="hasAlreadyReviewed(); else reviewForm"
+            class="text-center py-4 animate-fade-in"
           >
-            Publicar reseña
-          </button>
+            <div class="text-4xl mb-3">✅</div>
+            <p class="text-sm font-bold text-primary">¡Ya compartiste tu opinión!</p>
+            <p class="text-xs opacity-60 mt-2">
+              Puedes editar o eliminar tu reseña directamente en la lista de comentarios.
+            </p>
+          </div>
+
+          <ng-template #reviewForm>
+            <p class="text-sm opacity-60 mb-6">Comparte tu experiencia con otros exploradores.</p>
+            <div class="space-y-4">
+              <div class="form-control">
+                <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
+                  >Tu calificación</label
+                >
+                <div class="rating rating-lg gap-1 justify-center py-2">
+                  <input
+                    *ngFor="let r of [1, 2, 3, 4, 5]"
+                    type="radio"
+                    name="rating-form"
+                    class="mask mask-star-2 bg-yellow-400"
+                    (click)="newReview.rating = r"
+                    [checked]="newReview.rating === r"
+                  />
+                </div>
+              </div>
+
+              <div class="form-control">
+                <label class="label font-bold text-xs opacity-70 uppercase tracking-widest"
+                  >Tu opinión</label
+                >
+                <textarea
+                  [(ngModel)]="newReview.comment"
+                  class="textarea textarea-bordered h-32 focus:textarea-primary transition-all bg-base-200/30"
+                  placeholder="Cuéntanos los detalles de tu visita..."
+                ></textarea>
+              </div>
+
+              <button
+                (click)="addReview()"
+                class="btn btn-primary btn-block shadow-lg"
+                [disabled]="!newReview.comment || newReview.rating === 0"
+              >
+                Publicar reseña
+              </button>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<ng-template #loginMessage>
+  <div class="text-center p-6 bg-base-200 rounded-xl">
+    <p class="mb-4">Inicia sesión para dejar una reseña</p>
+    <a routerLink="/login" class="btn btn-primary btn-sm ml-2">Iniciar sesión</a>
+  </div>
+</ng-template>
 
 <div *ngIf="!loading() && !place()" class="text-center py-40">
   <h2 class="text-3xl font-black">Ups, no encontramos este lugar 🏜️</h2>
