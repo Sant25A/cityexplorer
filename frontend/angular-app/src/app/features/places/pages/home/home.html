@@ -19,10 +19,17 @@
     >
       <input
         type="text"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="onSearch()"
         placeholder="¿A dónde quieres ir?"
         class="input input-bordered w-full md:w-80 text-black focus:border-secondary transition-all"
       />
-      <button class="btn btn-primary px-8 shadow-lg hover:scale-105 transition-transform">
+      <button
+        (click)="onSearch()"
+        [disabled]="loading()"
+        class="btn btn-primary px-8 shadow-lg hover:scale-105 transition-transform"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5 mr-2"
@@ -57,20 +64,22 @@
     ></div>
   </div>
 
-  <!-- <div *ngIf="loading" class="text-center py-10">Cargando lugares...</div> -->
-
-  <!-- <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <app-place-card *ngFor="let place of places" [place]="place"></app-place-card>
-  </div> -->
-  <!--   
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-    <app-place-card *ngFor="let p of places" [place]="p" (toggleFavorite)="onToggleFavorite($event)"> </app-place-card>
-  </div> -->
-  <div *ngIf="loading" class="flex justify-center my-10">
+  <div *ngIf="!loading() && places().length === 0" class="flex justify-center my-10">
     <span class="loading loading-dots loading-lg text-primary"></span>
   </div>
 
-  <div *ngIf="!loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-    <app-place-card *ngFor="let p of places" [place]="p" (toggleFavorite)="onToggleFavorite($event)"></app-place-card>
+  <div *ngIf="!loading() && places().length === 0" class="text-center py-10 fade-in">
+    <p class="text-xl opacity-60">No encontramos coincidencias para "{{ searchTerm() }}"</p>
+    <button (click)="searchTerm.set(''); loadPlaces()" class="btn btn-link text-secondary">
+      Ver todos los destacados
+    </button>
+  </div>
+
+  <div *ngIf="!loading()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+    <app-place-card
+      *ngFor="let p of places()"
+      [place]="p"
+      (toggleFavorite)="onToggleFavorite($event)"
+    ></app-place-card>
   </div>
 </section>

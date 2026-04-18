@@ -21,12 +21,11 @@ export class PlaceService {
 
   getPlaceById(id: string) {
     return this.api
-      .get(`places/${id}`) // Sin la diagonal al inicio
+      .get(`places/${id}`) 
       .pipe(
         map((res: any) => {
-          // Imprime esto para estar 100% seguros de qué manda el backend
           console.log('Respuesta cruda del backend id:', res);
-          return this.mapPlace(res.place); // Extraemos la propiedad 'place'
+          return this.mapPlace(res.place);
         }),
       );
   }

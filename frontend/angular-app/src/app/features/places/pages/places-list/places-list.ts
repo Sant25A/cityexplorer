@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core'; // Cambiamos ChangeDetectorRef por signal
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
@@ -12,51 +12,76 @@ import { Place } from '../../../../shared/models/place.model';
   templateUrl: './places-list.html',
   styleUrl: './places-list.css',
 })
-export class PlacesList {
+export class PlacesList implements OnInit {
   private placeService = inject(PlaceService);
-  private cdr = inject(ChangeDetectorRef);
 
-  // Variables para filtros
-  search = '';
-  selectedCity = '';
-  selectedCategory = '';
+  // Señales para filtros
+  search = signal<string>('');
+  selectedCity = signal<string>('');
+  selectedCategory = signal<string>('');
+  sort = signal<string>('newest');
 
-  places: Place[] = [];
-  loading = true;
+  // Señales para datos y estado
+  places = signal<Place[]>([]);
+  loading = signal<boolean>(true);
+
+  // Señales para paginación
+  page = signal<number>(1);
+  limit = signal<number>(9);
+  totalPages = signal<number>(1);
+
+  // Tiempo de búsqueda
+  searchTimeout: any;
 
   ngOnInit() {
     this.fetchPlaces();
   }
 
   fetchPlaces() {
-    this.loading = true;
+    this.loading.set(true);
 
     const params: any = {
-      search: this.search,
-      location: this.selectedCity,
-      category: this.selectedCategory,
+      page: this.page(),
+      limit: this.limit(),
+      sort: this.sort()
     };
+
+    if (this.search()) params.search = this.search();
+    if (this.selectedCity()) params.location = this.selectedCity();
+    if (this.selectedCategory()) params.category = this.selectedCategory();
 
     this.placeService.getPlaces(params).subscribe({
       next: (res) => {
-        console.log('✅ Datos recibidos en PlacesList:', res.places);
-        this.places = res.places;
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.places.set(res.places || []);
+        this.totalPages.set(res.totalPages || 1);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error fetching places:', err);
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.places.set([]);
+        this.loading.set(false);
       },
     });
   }
 
   applyFilters() {
+    this.page.set(1); // Resetear a primera página al filtrar
     this.fetchPlaces();
   }
 
-  onToggleFavorite(place: any) {
+  changePage(newPage: number) {
+    this.page.set(newPage);
+    this.fetchPlaces();
+  }
+
+  onSearchChange() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.applyFilters();
+    }, 500);
+  }
+
+  onToggleFavorite(place: Place) {
     place.isFavorite = !place.isFavorite;
   }
 }

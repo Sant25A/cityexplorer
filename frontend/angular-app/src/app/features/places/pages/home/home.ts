@@ -1,44 +1,58 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // Agregué ChangeDetectorRef por si acaso
+import { Component, OnInit, inject, signal } from '@angular/core'; // Cambiamos ChangeDetectorRef por signal
 import { PlaceService } from '../../../../core/services/place.service';
 import { CommonModule } from '@angular/common';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Place } from '../../../../shared/models/place.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PlaceCard],
+  imports: [CommonModule, PlaceCard, FormsModule, RouterModule],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
   private placeService = inject(PlaceService);
-  private cdr = inject(ChangeDetectorRef); // Para forzar que se pinte la pantalla
 
-  places: any[] = [];
-  loading = true;
+  // Definimos nuestras señales
+  places = signal<Place[]>([]);
+  loading = signal<boolean>(true);
+  searchTerm = signal<string>('');
 
   ngOnInit() {
     this.loadPlaces();
   }
 
   loadPlaces() {
-    console.log('Solicitando lugares...');
-    this.placeService.getPlaces({ limit: 6, sort: 'rating' })
-      .subscribe({
-        next: (res) => {
-          console.log('✅ Datos recibidos en el componente:', res.places);
-          this.places = res.places;
-          this.loading = false;
-          this.cdr.detectChanges(); // Esto obliga a Angular a quitar los puntitos y poner las cards
-        },
-        error: (err) => {
-          console.error('❌ Error en el componente:', err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.loading.set(true);
+    
+    const params: any = {
+      limit: 6,
+      sort: 'rating'
+    };
+
+    if (this.searchTerm().trim()) {
+      params.search = this.searchTerm().trim();
+    }
+
+    this.placeService.getPlaces(params).subscribe({
+      next: (res) => {
+        this.places.set(res.places);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Error en el componente:', err);
+        this.loading.set(false);
+      }
+    });
   } 
 
-  onToggleFavorite(place: any) {
+  onSearch() {
+    this.loadPlaces();
+  }
+
+  onToggleFavorite(place: Place) {
     place.isFavorite = !place.isFavorite;
   }
 }

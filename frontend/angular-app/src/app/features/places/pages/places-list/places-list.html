@@ -1,9 +1,10 @@
 <section class="space-y-8 animate-fade-in">
-  
   <div class="flex flex-col md:flex-row gap-4 bg-base-200 p-6 rounded-2xl shadow-sm">
     <div class="relative w-full">
       <input
-        [(ngModel)]="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+        (input)="onSearchChange()"
         (keyup.enter)="applyFilters()"
         type="text"
         placeholder="¿Qué estás buscando? (ej: café, museo...)"
@@ -20,7 +21,11 @@
   <div class="flex flex-col md:flex-row gap-4">
     <div class="w-full">
       <label class="label opacity-60 text-xs font-bold uppercase tracking-widest">Ciudad</label>
-      <select [(ngModel)]="selectedCity" (change)="applyFilters()" class="select select-bordered w-full">
+      <select
+        [ngModel]="selectedCity()"
+        (ngModelChange)="selectedCity.set($event); applyFilters()"
+        class="select select-bordered w-full"
+      >
         <option value="">Todas las ciudades</option>
         <option value="CDMX">Ciudad de México</option>
         <option value="Toluca">Toluca</option>
@@ -29,7 +34,11 @@
 
     <div class="w-full">
       <label class="label opacity-60 text-xs font-bold uppercase tracking-widest">Categoría</label>
-      <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="select select-bordered w-full">
+      <select
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="selectedCategory.set($event); applyFilters()"
+        class="select select-bordered w-full"
+      >
         <option value="">Todas las categorías</option>
         <option value="cafe">Café</option>
         <option value="restaurante">Restaurante</option>
@@ -45,21 +54,54 @@
     </div>
   </div>
 
+  <div class="w-full">
+    <label class="label opacity-60 text-xs font-bold uppercase">Ordenar por</label>
+    <select 
+      [ngModel]="sort()" 
+      (ngModelChange)="sort.set($event); applyFilters()" 
+      class="select select-bordered w-full"
+    >
+      <option value="newest">Más recientes</option>
+      <option value="oldest">Más antiguos</option>
+      <option value="rating">Mejor valorados</option>
+    </select>
+  </div>
+
   <hr class="opacity-10" />
 
-  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20">
+  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-20">
     <span class="loading loading-dots loading-lg text-primary"></span>
     <p class="mt-4 opacity-50 italic">Buscando los mejores lugares para ti...</p>
   </div>
 
-  <div *ngIf="!loading">
-    <div *ngIf="places.length > 0; else noResults" 
-         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <app-place-card 
-        *ngFor="let place of places" 
-        [place]="place" 
-        (toggleFavorite)="onToggleFavorite($event)">
-      </app-place-card>
+  <div *ngIf="!loading()">
+    <div *ngIf="places().length > 0; else noResults">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <app-place-card
+          *ngFor="let place of places()"
+          [place]="place"
+          (toggleFavorite)="onToggleFavorite($event)"
+        ></app-place-card>
+      </div>
+
+      <div *ngIf="totalPages() > 1" class="flex justify-center mt-12 gap-2">
+        <button class="btn btn-sm btn-outline" [disabled]="page() === 1" (click)="changePage(page() - 1)">
+          ←
+        </button>
+
+        <button
+          *ngFor="let p of [].constructor(totalPages()); let i = index"
+          class="btn btn-sm"
+          [ngClass]="{ 'btn-primary': page() === i + 1, 'btn-ghost': page() !== i + 1 }"
+          (click)="changePage(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+
+        <button class="btn btn-sm btn-outline" [disabled]="page() === totalPages()" (click)="changePage(page() + 1)">
+          →
+        </button>
+      </div>
     </div>
   </div>
 
@@ -68,10 +110,12 @@
       <div class="text-6xl mb-4">🏜️</div>
       <h3 class="text-xl font-bold opacity-70">No encontramos resultados</h3>
       <p class="opacity-50">Intenta cambiar los filtros o el texto de búsqueda.</p>
-      <button (click)="search=''; selectedCategory=''; applyFilters();" class="btn btn-ghost btn-sm mt-4 text-primary">
+      <button
+        (click)="search.set(''); selectedCategory.set(''); applyFilters()"
+        class="btn btn-ghost btn-sm mt-4 text-primary"
+      >
         Limpiar filtros
       </button>
     </div>
   </ng-template>
-
 </section>
