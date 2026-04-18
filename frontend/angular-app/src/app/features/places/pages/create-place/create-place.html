@@ -54,6 +54,22 @@
         </div>
 
         <div class="form-control">
+          <label class="label font-bold text-xs uppercase tracking-widest opacity-70">
+            Categoría
+          </label>
+
+          <select
+            formControlName="category"
+            class="select select-bordered bg-base-100/50 focus:select-primary"
+          >
+            <option value="">Selecciona una categoría</option>
+            <option *ngFor="let cat of categories" [value]="cat">
+              {{ cat | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-control">
           <label class="label font-bold text-xs uppercase tracking-widest opacity-70"
             >Ubicación</label
           >
@@ -67,46 +83,33 @@
           </div>
         </div>
 
-        <div class="form-control">
-          <label class="label font-bold text-xs uppercase tracking-widest opacity-70"
-            >URL de la Imagen</label
-          >
-          <div class="relative">
-            <input
-              formControlName="image"
-              class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
-              placeholder="https://images..."
-            />
-            <span class="absolute left-3 top-3.5 opacity-40 text-primary">🖼️</span>
-          </div>
+        <div class="form-control md:col-span-2">
+          <label class="label font-bold text-xs uppercase tracking-widest opacity-70">
+            Imágenes (Máximo {{ MAX_IMAGES }}) - Llevas {{ images().length }}
+          </label>
+          <input
+            #fileInput
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onFileChange($event)"
+            class="file-input file-input-bordered w-full"
+            [disabled]="images().length >= MAX_IMAGES"
+          />
         </div>
 
-        <div class="md:col-span-2">
-          <label class="label font-bold text-xs uppercase tracking-widest opacity-70"
-            >Vista previa de la imagen</label
-          >
-
-          <div
-            *ngIf="form.value.image && form.get('image')?.valid"
-            class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white h-52 group animate-fade-in"
-          >
-            <img
-              [src]="form.value.image"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-            <span
-              class="absolute bottom-4 left-4 text-white text-xs font-bold bg-primary/80 px-2 py-1 rounded-lg"
-              >Imagen detectada ✅</span
-            >
-          </div>
-
-          <div
-            *ngIf="!form.value.image || form.get('image')?.invalid"
-            class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/20 h-52 bg-primary/5 opacity-50"
-          >
-            <span class="text-4xl mb-2">📸</span>
-            <p class="text-xs font-medium uppercase tracking-tighter">Esperando URL de imagen...</p>
+        <div class="md:col-span-2" *ngIf="images().length > 0">
+          <div class="flex flex-wrap gap-4 mt-4">
+            <div *ngFor="let img of images(); let i = index" class="relative w-24 h-24">
+              <img [src]="img" class="w-full h-full object-cover rounded-xl" />
+              <button
+                type="button"
+                (click)="removeImage(i); $event.stopPropagation()"
+                class="absolute top-1 right-1 btn btn-xs btn-circle btn-error"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
 
@@ -121,7 +124,7 @@
           ></textarea>
         </div>
 
-        <div class="md:col-span-2" *ngIf="form.value.image && form.get('image')?.valid">
+        <!-- <div class="md:col-span-2" *ngIf="form.value.image && form.get('image')?.valid">
           <label class="label font-bold text-xs uppercase tracking-widest opacity-70"
             >Vista previa</label
           >
@@ -134,29 +137,16 @@
             />
             <div class="absolute inset-0 bg-black/20"></div>
           </div>
-        </div>
+        </div> -->
 
         <div class="md:col-span-2 pt-4">
           <button
             type="submit"
-            class="btn btn-primary btn-block shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-            [disabled]="form.invalid"
+            class="btn btn-primary btn-block"
+            [disabled]="form.invalid || loading"
           >
-            Publicar Lugar
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 ml-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <span *ngIf="!loading">Publicar Lugar</span>
+            <span *ngIf="loading" class="loading loading-spinner"></span>
           </button>
         </div>
       </form>

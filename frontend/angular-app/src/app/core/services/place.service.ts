@@ -19,7 +19,6 @@ export class PlaceService {
     );
   }
 
-  // En place.service.ts
   getPlaceById(id: string) {
     return this.api
       .get(`places/${id}`) // Sin la diagonal al inicio
@@ -30,6 +29,12 @@ export class PlaceService {
           return this.mapPlace(res.place); // Extraemos la propiedad 'place'
         }),
       );
+  }
+
+  createPlace(data: any) {
+    return this.api.post('places', data).pipe(
+      map((res: any) => this.mapPlace(res.place))
+    );
   }
 
   private mapPlace(place: any) {
