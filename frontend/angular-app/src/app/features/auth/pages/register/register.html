@@ -39,6 +39,7 @@
             <input
               type="text"
               formControlName="username"
+              autocomplete="username"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
               placeholder="SantanaDev"
               [ngClass]="{
@@ -79,6 +80,7 @@
             <input
               type="email"
               formControlName="email"
+              autocomplete="email"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
               placeholder="correo@ejemplo.com"
               [ngClass]="{
@@ -121,6 +123,7 @@
               formControlName="password"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
               placeholder="••••••••"
+              autocomplete="new-password"
               [ngClass]="{
                 'input-error':
                   form.get('password')?.invalid && (form.get('password')?.touched || submitted),
@@ -153,6 +156,7 @@
               formControlName="confirmPassword"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
               placeholder="••••••••"
+              autocomplete="new-password"
               [ngClass]="{
                 'input-error':
                   (form.get('confirmPassword')?.invalid || form.hasError('passwordMismatch')) &&

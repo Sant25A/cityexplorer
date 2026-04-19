@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
 import { RouterModule } from '@angular/router';
-
 @Component({
   selector: 'app-favorites-page',
   imports: [CommonModule, PlaceCard, RouterModule],

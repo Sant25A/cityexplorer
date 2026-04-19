@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core'; // Cambiamos ChangeDetectorRef por signal
+import { Component, OnInit, inject, signal } from '@angular/core'; 
 import { PlaceService } from '../../../../core/services/place.service';
 import { CommonModule } from '@angular/common';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
@@ -15,7 +15,7 @@ import { Place } from '../../../../shared/models/place.model';
 export class Home implements OnInit {
   private placeService = inject(PlaceService);
 
-  // Definimos nuestras señales
+  // Definición de las señales
   places = signal<Place[]>([]);
   loading = signal<boolean>(true);
   searchTerm = signal<string>('');
@@ -43,6 +43,7 @@ export class Home implements OnInit {
       },
       error: (err) => {
         console.error('Error en el componente:', err);
+        this.places.set([]);
         this.loading.set(false);
       }
     });

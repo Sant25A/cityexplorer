@@ -65,7 +65,7 @@ export class PlacesList implements OnInit {
   }
 
   applyFilters() {
-    this.page.set(1); // Resetear a primera página al filtrar
+    this.page.set(1);
     this.fetchPlaces();
   }
 
