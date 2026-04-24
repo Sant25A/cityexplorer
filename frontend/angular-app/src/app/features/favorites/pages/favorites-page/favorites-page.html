@@ -1,5 +1,4 @@
 <section class="max-w-7xl mx-auto px-6 pt-2 pb-10 min-h-[calc(100vh-64px)] animate-fade-in-up">
-
   <div class="text-center mb-16">
     <div class="inline-flex p-3 bg-secondary/10 rounded-2xl mb-4">
       <span class="text-3xl">❤️</span>
@@ -10,45 +9,65 @@
     <p class="opacity-60 mt-3 font-light text-lg italic max-w-lg mx-auto">
       Tu colección personal de rincones especiales en la ciudad.
     </p>
-    <div class="h-1 w-24 bg-gradient-to-r from-primary to-secondary mx-auto mt-6 rounded-full"></div>
+    <div
+      class="h-1 w-24 bg-gradient-to-r from-primary to-secondary mx-auto mt-6 rounded-full"
+    ></div>
   </div>
 
-  <div *ngIf="favorites.length > 0; else emptyState"
-       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-    
-    <div *ngFor="let place of favorites" class="animate-fade-in">
-      <app-place-card
-        [place]="place"
-        (toggleFavorite)="onToggleFavorite($event)"
-      ></app-place-card>
+  <div *ngIf="loading()" class="flex justify-center py-20">
+    <span class="loading loading-dots loading-lg text-primary"></span>
+  </div>
+
+  <div *ngIf="!loading()">
+    <div
+      *ngIf="favorites().length > 0; else emptyState"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+    >
+      <div *ngFor="let place of favorites()" class="animate-fade-in">
+        <app-place-card
+          [place]="place"
+          (toggleFavorite)="onToggleFavorite($event)"
+        ></app-place-card>
+      </div>
     </div>
-    
   </div>
 
   <ng-template #emptyState>
-    <div class="flex flex-col items-center justify-center text-center mt-10 p-12 rounded-3xl bg-base-200/50 border-2 border-dashed border-primary/10">
-      
+    <div
+      class="flex flex-col items-center justify-center text-center mt-10 p-12 rounded-3xl bg-base-200/50 border-2 border-dashed border-primary/10"
+    >
       <div class="relative mb-8">
         <div class="text-8xl opacity-20 filter grayscale">🏙️</div>
         <div class="absolute -bottom-2 -right-2 text-4xl animate-bounce">💔</div>
       </div>
 
-      <h2 class="text-3xl font-black text-primary mb-3">
-        Tu lista está muy solitaria
-      </h2>
+      <h2 class="text-3xl font-black text-primary mb-3">Tu lista está muy solitaria</h2>
 
       <p class="opacity-70 max-w-md text-lg font-light mb-8 leading-relaxed">
-        Parece que aún no has encontrado ese lugar especial. ¡Explora la ciudad y guarda tus favoritos aquí!
+        Parece que aún no has encontrado ese lugar especial. ¡Explora la ciudad y guarda tus
+        favoritos aquí!
       </p>
 
-      <a routerLink="/places" 
-         class="btn btn-primary btn-lg px-10 shadow-xl shadow-primary/20 hover:scale-105 transition-all gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      <a
+        routerLink="/places"
+        class="btn btn-primary btn-lg px-10 shadow-xl shadow-primary/20 hover:scale-105 transition-all gap-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
         </svg>
         Empezar a explorar
       </a>
     </div>
   </ng-template>
-
 </section>

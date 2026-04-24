@@ -7,6 +7,7 @@ import { Place } from '../../../../shared/models/place.model';
 import { ReviewService } from '../../../../core/services/review.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { RouterLink } from '@angular/router';
+import { FavoriteService } from '../../../../core/services/favorite.service';
 @Component({
   selector: 'app-place-detail',
   standalone: true,
@@ -19,6 +20,7 @@ export class PlaceDetail implements OnInit {
   private placeService = inject(PlaceService);
   private reviewService = inject(ReviewService);
   private authService = inject(AuthService);
+  private favoriteService = inject(FavoriteService);
   currentUser = this.authService.getUser();
 
   // Definimos señales
@@ -35,7 +37,7 @@ export class PlaceDetail implements OnInit {
 
   // Señal para creación de reseñas
   hasAlreadyReviewed = computed(() => {
-    return this.reviews().some(review => this.isMyReview(review))
+    return this.reviews().some((review) => this.isMyReview(review));
   });
 
   // Edición de reseñas
@@ -181,13 +183,25 @@ export class PlaceDetail implements OnInit {
     });
   }
 
+  // place-detail.ts
   toggleFavorite() {
     const currentPlace = this.place();
-    if (currentPlace) {
-      this.place.set({
-        ...currentPlace,
-        isFavorite: !currentPlace.isFavorite,
-      });
+    if (!currentPlace) return;
+
+    if (!this.authService.isAuthenticated()) {
+      window.location.href = '/login';
+      return;
     }
+
+    this.favoriteService.toggleFavorite(currentPlace.id).subscribe({
+      next: (res) => {
+        // Actualizamos la señal con el nuevo estado que devuelve el backend
+        this.place.set({
+          ...currentPlace,
+          isFavorite: res.isFavorite,
+        });
+      },
+      error: (err) => console.error('Error toggle favorito:', err),
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core'; 
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { PlaceService } from '../../../../core/services/place.service';
 import { CommonModule } from '@angular/common';
 import { PlaceCard } from '../../../../shared/components/place-card/place-card';
@@ -26,10 +26,10 @@ export class Home implements OnInit {
 
   loadPlaces() {
     this.loading.set(true);
-    
+
     const params: any = {
       limit: 6,
-      sort: 'rating'
+      sort: 'rating',
     };
 
     if (this.searchTerm().trim()) {
@@ -45,15 +45,17 @@ export class Home implements OnInit {
         console.error('Error en el componente:', err);
         this.places.set([]);
         this.loading.set(false);
-      }
+      },
     });
-  } 
+  }
 
   onSearch() {
     this.loadPlaces();
   }
 
   onToggleFavorite(place: Place) {
-    place.isFavorite = !place.isFavorite;
+    this.places.update((prev) =>
+      prev.map((p) => (p.id === place.id ? { ...p, isFavorite: !p.isFavorite } : p)),
+    );
   }
 }

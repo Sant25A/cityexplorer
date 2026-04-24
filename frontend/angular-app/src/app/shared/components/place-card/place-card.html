@@ -3,29 +3,28 @@
 >
   <figure class="relative overflow-hidden">
     <img
-      [src]="place.image"
+      [src]="place?.image || place?.images?.[0] || 'https://placehold.co/600x400'"
       alt="Lugar"
       class="group-hover:scale-110 transition-transform duration-700 w-full h-56 object-cover"
     />
     <div class="absolute top-4 right-4 badge badge-base-100 font-bold gap-2 p-3 shadow-lg">
       <span class="text-yellow-500 text-xl">★</span>
-      {{ place.rating }}
+      {{ place?.rating || 0 }}
     </div>
 
-    <!-- BOTÓN FAVORITO -->
     <button
-      (click)="onToggleFavorite(); $event.stopPropagation()"
-      class="absolute top-4 left-4 btn btn-circle btn-sm bg-base-100/80 backdrop-blur border-none hover:scale-110 transition"
+      (click)="onToggleFavoriteClick($event)"
+      class="absolute top-4 left-4 btn btn-circle btn-sm bg-base-100/80 border-none backdrop-blur-sm shadow-md hover:scale-110 transition-all"
     >
-      <span [ngClass]="place.isFavorite ? 'text-red-500' : 'text-gray-400'" class="text-xl">
-        {{ place.isFavorite ? '❤️' : '🤍' }}
+      <span class="text-lg">
+        {{ place?.isFavorite ? '❤️' : '🤍' }}
       </span>
     </button>
   </figure>
 
   <div class="card-body p-6">
     <h3 class="card-title text-2xl font-bold group-hover:text-primary transition-colors">
-      {{ place.name }}
+      {{ place?.name || 'Cargando...' }}
     </h3>
 
     <div class="flex items-center gap-1 text-sm opacity-70 mb-2">

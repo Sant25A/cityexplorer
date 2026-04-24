@@ -82,6 +82,13 @@ export class PlacesList implements OnInit {
   }
 
   onToggleFavorite(place: Place) {
-    place.isFavorite = !place.isFavorite;
-  }
+  this.places.update(currentPlaces => {
+    return currentPlaces.map(p => {
+      if (p.id === place.id) {
+        return { ...p, isFavorite: !p.isFavorite };
+      }
+      return p;
+    });
+  });
+}
 }
