@@ -65,7 +65,10 @@ export class PlaceService {
   }
 
   createPlace(data: any) {
-    return this.api.post('places', data).pipe(map((res: any) => this.mapPlace(res.place)));
+    // return this.api.post('places', data).pipe(map((res: any) => this.mapPlace(res.place)));
+    return this.api.post('places', data).pipe(
+      map((res: any) => this.mapPlace(res.place)),
+    );
   }
 
   private mapPlace(place: any) {

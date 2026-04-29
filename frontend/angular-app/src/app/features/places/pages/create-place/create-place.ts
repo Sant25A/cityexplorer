@@ -18,6 +18,9 @@ export class CreatePlace {
   private placeService = inject(PlaceService);
   private router = inject(Router);
 
+  files: File[] = [];
+  previewImages = signal<string[]>([]);
+
   categories = [
     'cafe',
     'restaurante',
@@ -42,31 +45,33 @@ export class CreatePlace {
     description: ['', [Validators.required, Validators.minLength(10)]],
     category: ['', Validators.required],
     location: ['', Validators.required],
-    // Quitamos 'image' y 'lat/lng' de aquí para que el form sea válido sin ellas
   });
 
   onFileChange(event: any) {
     const files: FileList = event.target.files;
     if (!files) return;
 
-    if (this.images().length >= this.MAX_IMAGES) {
+    if (this.previewImages().length >= this.MAX_IMAGES) {
       alert(`Máximo ${this.MAX_IMAGES} imágenes permitidas`);
-      this.resetFileInput(); // Limpiamos el input si excedió
+      this.resetFileInput();
       return;
     }
 
-    const remainingSlots = this.MAX_IMAGES - this.images().length;
+    const remainingSlots = this.MAX_IMAGES - this.previewImages().length;
     const filesToProcess = Array.from(files).slice(0, remainingSlots);
 
     filesToProcess.forEach((file) => {
+      // Guardamos archivo real
+      this.files.push(file);
+
+      // Generamos preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.images.update((prev) => [...prev, e.target.result]);
+        this.previewImages.update((prev) => [...prev, e.target.result]);
       };
       reader.readAsDataURL(file);
     });
 
-    // IMPORTANTE: Limpiamos el valor del input para permitir seleccionar el mismo archivo después
     this.resetFileInput();
   }
 
@@ -78,30 +83,41 @@ export class CreatePlace {
   }
 
   removeImage(index: number) {
-    this.images.update((prev) => prev.filter((_, i) => i !== index));
+    this.previewImages.update((prev) => prev.filter((_, i) => i !== index));
+    this.files.splice(index, 1);
   }
 
   onSubmit() {
-    if (this.form.invalid || this.loading) return;
+    if (this.form.invalid || this.loading || this.files.length === 0) {
+      if (this.files.length === 0) {
+        alert('Por favor completa el formulario y agrega al menos una imagen');
+      }
+      return;
+    }
 
     this.loading = true;
 
-    // Aquí mandamos el arreglo de la señal (vaciándolo si no quieres probar fotos aún)
-    const payload = {
-      ...this.form.getRawValue(),
-      images: [], // <-- Lo dejamos vacío de momento como pediste
-      lat: null,
-      lng: null,
-    };
+    const formData = new FormData();
 
-    this.placeService.createPlace(payload).subscribe({
+    // Campos normales
+    formData.append('name', this.form.value.name!);
+    formData.append('description', this.form.value.description!);
+    formData.append('category', this.form.value.category!);
+    formData.append('location', this.form.value.location!);
+
+    // Archivos
+    this.files.forEach((file) => {
+      formData.append('images', file);
+    });
+
+    this.placeService.createPlace(formData).subscribe({
       next: (place) => {
         this.router.navigate(['/places', place.id]);
       },
       error: (err) => {
         console.error('Error:', err);
         this.loading = false;
-        alert('Hubo un error al crear el lugar. Revisa la consola.');
+        alert('Hubo un error al crear el lugar');
       },
     });
   }

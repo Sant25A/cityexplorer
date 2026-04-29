@@ -85,7 +85,7 @@
 
         <div class="form-control md:col-span-2">
           <label class="label font-bold text-xs uppercase tracking-widest opacity-70">
-            Imágenes (Máximo {{ MAX_IMAGES }}) - Llevas {{ images().length }}
+            Imágenes (Máximo {{ MAX_IMAGES }}) - Llevas {{ previewImages().length }}
           </label>
           <input
             #fileInput
@@ -94,13 +94,13 @@
             accept="image/*"
             (change)="onFileChange($event)"
             class="file-input file-input-bordered w-full"
-            [disabled]="images().length >= MAX_IMAGES"
+            [disabled]="previewImages().length >= MAX_IMAGES"
           />
         </div>
 
-        <div class="md:col-span-2" *ngIf="images().length > 0">
+        <div class="md:col-span-2" *ngIf="previewImages().length > 0">
           <div class="flex flex-wrap gap-4 mt-4">
-            <div *ngFor="let img of images(); let i = index" class="relative w-24 h-24">
+            <div *ngFor="let img of previewImages(); let i = index" class="relative w-24 h-24">
               <img [src]="img" class="w-full h-full object-cover rounded-xl" />
               <button
                 type="button"
@@ -123,21 +123,6 @@
             placeholder="Cuéntanos qué hace a este lugar especial..."
           ></textarea>
         </div>
-
-        <!-- <div class="md:col-span-2" *ngIf="form.value.image && form.get('image')?.valid">
-          <label class="label font-bold text-xs uppercase tracking-widest opacity-70"
-            >Vista previa</label
-          >
-          <div
-            class="relative rounded-2xl overflow-hidden shadow-xl border-4 border-white/50 h-48 group"
-          >
-            <img
-              [src]="form.value.image"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div class="absolute inset-0 bg-black/20"></div>
-          </div>
-        </div> -->
 
         <div class="md:col-span-2 pt-4">
           <button
