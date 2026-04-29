@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middlewares/upload.middleware');
 
 const protect = require('../middlewares/auth.middleware');
 const { 
@@ -10,19 +11,23 @@ const {
   deletePlace 
 } = require('../controllers/place.controller');
 
-// Obtener lugares (público)
+// RUTAS PÚBLICAS
+// Obtener lugares
 router.get('/', getPlaces);
-
-// Obtener lugar por ID (público)
+// Obtener lugar por ID
 router.get('/:id', getPlaceById);
 
-// Actualizar lugar (protegido)
+// RUTAS PROTEGIDAS
+// Crear lugar con imágenes
+router.post(
+  '/',
+  protect,
+  upload.array('images', 5), // Permitir hasta 5 imágenes
+  createPlace
+)
+// Actualizar lugar
 router.put('/:id', protect, updatePlace);
-
-// Crear lugar (protegido)
-router.post('/', protect, createPlace);
-
-// Eliminar lugar (protegido)
+// Eliminar lugar
 router.delete('/:id', protect, deletePlace);
 
 module.exports = router;

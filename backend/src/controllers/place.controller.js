@@ -1,12 +1,16 @@
 const Place = require('../models/Place');
 const { VALID_CATEGORIES } = require('../utils/constants');
+const cloudinary = require('../config/cloudinary');
 
 // Crear nuevo lugar
 exports.createPlace = async (req, res) => {
+    console.log('Body recibidos:', req.body); // Debug: Verificar datos del formulario
+    console.log('Archivos recibidos:', req.files); // Debug: Verificar archivos recibidos
+
     try {
         const { name, description, category, location } = req.body;
 
-        // 1. Validaciones
+        // Validaciones
         if (!name?.trim() || !description.trim() || !category || !location.trim()) {
             return res.status(400).json({
                 message: 'Todos los campos son obligatorios'
@@ -25,13 +29,50 @@ exports.createPlace = async (req, res) => {
             });
         }
 
+        // Dentro de exports.createPlace en el backend
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                message: 'Debes subir al menos una imagen'
+            });
+        }
+
+        let imageUrls = [];
+
+        // Subir imágenes si existen
+        if (req.files && req.files.length > 0) {
+            const uploadPromises = req.files.map(file => {
+                return new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        {
+                            folder: 'cityexplorer',
+
+                            // Optimización de imágenes
+                            transformation: [
+                                { width: 800, height: 600, crop: 'limit' },
+                                { quality: 'auto', fetch_format: 'auto' }
+                            ]
+                        },
+                        (error, result) => {
+                            if (error) reject(error);
+                            else resolve(result.secure_url);
+                        }
+                    );
+
+                    stream.end(file.buffer);
+                });
+            });
+
+            imageUrls = await Promise.all(uploadPromises);
+        }
+
         // 2. Crear objeto
         const newPlace = new Place({
             name,
             description,
             category,
             location,
-            user: req.user.id
+            user: req.user.id,
+            images: imageUrls
         });
 
         // 3. Guardar en DB
@@ -68,6 +109,11 @@ exports.getPlaces = async (req, res) => {
             filter.category = category;
         }
 
+        // Filtro por ubicación (búsqueda parcial, insensible a mayúsculas)
+        if (req.query.location) {
+            filter.location = { $regex: req.query.location, $options: 'i' };
+        }
+
         // Busqueda por texto
         if (search) {
             filter.$text = { $search: search };
@@ -92,7 +138,7 @@ exports.getPlaces = async (req, res) => {
         }
 
         const places = await Place.find(filter)
-            .select('name description category location averageRating createdAt')
+            .select('name description category location averageRating createdAt images')
             .populate('user', 'username')
             .sort(sortOption)
             .skip(skip)

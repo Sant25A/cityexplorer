@@ -47,7 +47,7 @@ exports.createReview = async (req, res) => {
 
         if (existingReview) {
             return res.status(400).json({
-                message: 'Ya has dejado una reseña para este lugar'
+                message: 'Ya has dejado una reseña para este lugar u ocurrio un error'
             });
         }
 
@@ -76,7 +76,7 @@ exports.createReview = async (req, res) => {
         // Error por índice único
         if (error.code === 11000) {
             return res.status(400).json({
-                message: 'Ya existe una reseña para este lugar'
+                message: 'Ya existe su reseña para este lugar'
             });
         }
 
@@ -92,7 +92,7 @@ exports.getReviewsByPlace = async (req, res) => {
         const { placeId } = req.params;
 
         const reviews = await Review.find({ place: placeId })
-            .populate('user', 'username');
+            .populate('user', 'username id');
 
         res.status(200).json({
             count: reviews.length,

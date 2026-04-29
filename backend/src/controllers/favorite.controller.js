@@ -27,7 +27,7 @@ exports.toggleFavorite = async (req, res) => {
             place: placeId
         });
 
-        // 🔁 Toggle
+        // Toggle
         if (existingFavorite) {
             await existingFavorite.deleteOne();
 

@@ -24,7 +24,7 @@ app.use(cors({
 // Seguridad
 app.use(helmet());
 
-// Rate limiting (ANTES de rutas)
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -43,7 +43,7 @@ app.use('/api', require('./src/routes'));
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-  res.send('API CityExplorer funcionando 🚀');
+  res.send('API CityExplorer funcionando');
 });
 
 const PORT = process.env.PORT || 4000;
