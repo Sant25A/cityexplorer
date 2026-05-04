@@ -18,6 +18,10 @@ export class CreatePlace {
   private placeService = inject(PlaceService);
   private router = inject(Router);
 
+  // Lugares creados por el usuario
+  myPlaces = signal<any[]>([]);
+  loadingMyPlaces = signal<boolean>(false);
+
   files: File[] = [];
   previewImages = signal<string[]>([]);
 
@@ -46,6 +50,25 @@ export class CreatePlace {
     category: ['', Validators.required],
     location: ['', Validators.required],
   });
+
+  ngOnInit() {
+    this.loadMyPlaces();
+  }
+
+  loadMyPlaces() {
+    this.loadingMyPlaces.set(true); // 🔥 Usa .set(true)
+
+    this.placeService.getMyPlaces().subscribe({
+      next: (places) => {
+        this.myPlaces.set(places);
+        this.loadingMyPlaces.set(false); // 🔥 Usa .set(false)
+      },
+      error: (err) => {
+        console.error(err);
+        this.loadingMyPlaces.set(false);
+      },
+    });
+  }
 
   onFileChange(event: any) {
     const files: FileList = event.target.files;
@@ -112,12 +135,30 @@ export class CreatePlace {
 
     this.placeService.createPlace(formData).subscribe({
       next: (place) => {
+        this.loadMyPlaces();
         this.router.navigate(['/places', place.id]);
       },
       error: (err) => {
         console.error('Error:', err);
         this.loading = false;
         alert('Hubo un error al crear el lugar');
+      },
+    });
+  }
+
+  deletePlace(id: string) {
+    const confirmDelete = confirm('¿Seguro que quieres eliminar este lugar?');
+
+    if (!confirmDelete) return;
+
+    this.placeService.deletePlace(id).subscribe({
+      next: () => {
+        // quitar del estado local (UX rápida 🚀)
+        this.myPlaces.update((prev) => prev.filter((p) => p.id !== id));
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error al eliminar');
       },
     });
   }

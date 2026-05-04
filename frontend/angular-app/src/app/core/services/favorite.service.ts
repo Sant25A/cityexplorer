@@ -12,16 +12,48 @@ export class FavoriteService {
     return this.api.post('favorites', { placeId }).pipe(map((res: any) => res));
   }
 
+  // getFavorites() {
+  //   return this.api.get('favorites').pipe(
+  //     map((res: any) =>
+  //       res.favorites.map((f: any) => ({
+  //         ...f.place,
+  //         id: f.place._id, // Forzamos id sin guion bajo aquí
+  //         isFavorite: true,
+  //         image: f.place.images?.[0] || 'https://placehold.co/600x400',
+  //         rating: f.place.averageRating || 0,
+  //       })),
+  //     ),
+  //   );
+  // }
+  // favorite.service.ts
+
   getFavorites() {
     return this.api.get('favorites').pipe(
       map((res: any) =>
-        res.favorites.map((f: any) => ({
-          ...f.place,
-          id: f.place._id, // Forzamos id sin guion bajo aquí
-          isFavorite: true,
-          image: f.place.images?.[0] || 'https://placehold.co/600x400',
-          rating: f.place.averageRating || 0,
-        })),
+        res.favorites
+          .filter((f: any) => f.place !== null) 
+          .map((f: any) => {
+            const p = f.place;
+
+            // Normalizamos las imágenes para que coincidan con PlaceService.mapPlace
+            let imagesNormalized: string[] = [];
+            if (Array.isArray(p.images)) {
+              imagesNormalized = p.images.map((img: any) =>
+                typeof img === 'string' ? img : img.url,
+              );
+            }
+
+            return {
+              ...p,
+              id: p._id,
+              isFavorite: true,
+              // Usamos la primera imagen del array normalizado o el placeholder
+              image:
+                imagesNormalized.length > 0 ? imagesNormalized[0] : 'https://placehold.co/600x400',
+              images: imagesNormalized,
+              rating: p.averageRating || 0,
+            };
+          }),
       ),
     );
   }
