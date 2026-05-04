@@ -1,6 +1,8 @@
 const Place = require('../models/Place');
 const { VALID_CATEGORIES } = require('../utils/constants');
 const cloudinary = require('../config/cloudinary');
+const Review = require('../models/Review');
+const Favorite = require('../models/Favorite');
 
 // Crear nuevo lugar
 exports.createPlace = async (req, res) => {
@@ -36,7 +38,17 @@ exports.createPlace = async (req, res) => {
             });
         }
 
-        let imageUrls = [];
+        // Límite de lugares por usuario
+        const count = await Place.countDocuments({ user: req.user.id });
+
+        if (count >= 10) {
+            return res.status(400).json({
+                message: 'Has alcanzado el límite de 10 lugares. Elimina algunos para crear nuevos.'
+            });
+        }
+
+        // let imageUrls = [];
+        let images = [];
 
         // Subir imágenes si existen
         if (req.files && req.files.length > 0) {
@@ -54,7 +66,11 @@ exports.createPlace = async (req, res) => {
                         },
                         (error, result) => {
                             if (error) reject(error);
-                            else resolve(result.secure_url);
+                            // else resolve(result.secure_url);
+                            else resolve({
+                                url: result.secure_url,
+                                public_id: result.public_id
+                            });
                         }
                     );
 
@@ -62,7 +78,8 @@ exports.createPlace = async (req, res) => {
                 });
             });
 
-            imageUrls = await Promise.all(uploadPromises);
+            // imageUrls = await Promise.all(uploadPromises);
+            images = await Promise.all(uploadPromises);
         }
 
         // 2. Crear objeto
@@ -72,7 +89,8 @@ exports.createPlace = async (req, res) => {
             category,
             location,
             user: req.user.id,
-            images: imageUrls
+            // images: imageUrls
+            images
         });
 
         // 3. Guardar en DB
@@ -198,6 +216,24 @@ exports.getPlaceById = async (req, res) => {
     }
 };
 
+// Obtener lugares por usuario autenticado
+exports.getMyPlaces = async (req, res) => {
+    try {
+        const places = await Place.find({ user: req.user.id })
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            count: places.length,
+            places
+        });
+    } catch (error) {
+        console.error('Error al obtener mis lugares:', error);
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+};
+
 // Actualización de lugar
 exports.updatePlace = async (req, res) => {
     try {
@@ -268,12 +304,11 @@ exports.updatePlace = async (req, res) => {
     }
 };
 
-// Eliminar lugar
+// Eliminación de lugar
 exports.deletePlace = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Buscar lugar
         const place = await Place.findById(id);
 
         if (!place) {
@@ -282,21 +317,35 @@ exports.deletePlace = async (req, res) => {
             });
         }
 
-        // 2. Validar dueño
+        // Validar dueño
         if (place.user.toString() !== req.user.id) {
             return res.status(403).json({
                 message: 'No tienes permiso para eliminar este lugar'
             });
         }
 
-        // 3. Eliminar
+        // 1. Eliminar imágenes de Cloudinary
+        const deleteImages = place.images.map(img =>
+            cloudinary.uploader.destroy(img.public_id)
+        );
+
+        await Promise.all(deleteImages);
+
+        // 2. Eliminar reviews
+        await Review.deleteMany({ place: id });
+
+        // 3. Eliminar favoritos
+        await Favorite.deleteMany({ place: id });
+
+        // 4. Eliminar lugar
         await place.deleteOne();
 
         res.status(200).json({
-            message: 'Lugar eliminado correctamente'
+            message: 'Lugar eliminado completamente'
         });
+
     } catch (error) {
-        console.error('Error al eliminar lugar: ', error);
+        console.error('Error al eliminar lugar:', error);
 
         if (error.name === 'CastError') {
             return res.status(400).json({

@@ -53,10 +53,22 @@ const placeSchema = new mongoose.Schema(
     //     required: true,
     //   }
     // },
+    // images: [
+    //   {
+    //     type: String,
+    //   },
+    // ],
     images: [
       {
-        type: String,
-      },
+        url: {
+          type: String,
+          required: true
+        },
+        public_id: {
+          type: String,
+          required: true
+        }
+      }
     ],
     averageRating: {
       type: Number,
