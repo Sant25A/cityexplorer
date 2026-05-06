@@ -110,6 +110,10 @@ export class CreatePlace {
     this.files.splice(index, 1);
   }
 
+  viewPlace(id: string) {
+    this.router.navigate(['/places', id]);
+  }
+
   onSubmit() {
     if (this.form.invalid || this.loading || this.files.length === 0) {
       if (this.files.length === 0) {

@@ -1,41 +1,73 @@
-<section class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 p-4 md:p-8">
-  
+<section
+  class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 p-4 md:p-8"
+>
   <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
-    
     <div class="lg:col-span-6">
       <div class="card bg-base-100 shadow-2xl border border-base-200 sticky top-8">
         <div class="card-body p-8">
           <div class="flex items-center gap-4 mb-8">
             <div class="p-3 bg-primary/10 rounded-2xl shadow-inner">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
               <h1 class="text-2xl font-black text-primary tracking-tight">Nuevo Destino</h1>
-              <p class="text-xs opacity-60 font-medium">Has creado {{ myPlaces().length }}/10 lugares</p>
+              <p class="text-xs opacity-60 font-medium">
+                Has creado {{ myPlaces().length }}/10 lugares
+              </p>
             </div>
           </div>
 
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
             <!-- Nombre -->
             <div class="form-control">
-              <label class="label font-bold text-xs uppercase tracking-widest opacity-60">Nombre del lugar</label>
-              <input formControlName="name" class="input input-bordered focus:input-primary bg-base-200/30" placeholder="Ej. Terraza del Sol" />
+              <label class="label font-bold text-xs uppercase tracking-widest opacity-60"
+                >Nombre del lugar</label
+              >
+              <input
+                formControlName="name"
+                class="input input-bordered focus:input-primary bg-base-200/30"
+                placeholder="Ej. Terraza del Sol"
+              />
             </div>
 
             <!-- Categoría y Ubicación en rejilla -->
             <div class="grid grid-cols-1 gap-4">
               <div class="form-control">
-                <label class="label font-bold text-xs uppercase tracking-widest opacity-60">Categoría</label>
-                <select formControlName="category" class="select select-bordered focus:select-primary bg-base-200/30">
+                <label class="label font-bold text-xs uppercase tracking-widest opacity-60"
+                  >Categoría</label
+                >
+                <select
+                  formControlName="category"
+                  class="select select-bordered focus:select-primary bg-base-200/30"
+                >
                   <option value="">Selecciona...</option>
-                  <option *ngFor="let cat of categories" [value]="cat">{{ cat | titlecase }}</option>
+                  <option *ngFor="let cat of categories" [value]="cat">
+                    {{ cat | titlecase }}
+                  </option>
                 </select>
               </div>
               <div class="form-control">
-                <label class="label font-bold text-xs uppercase tracking-widest opacity-60">Ubicación</label>
-                <input formControlName="location" class="input input-bordered focus:input-primary bg-base-200/30" placeholder="📍 Ciudad" />
+                <label class="label font-bold text-xs uppercase tracking-widest opacity-60"
+                  >Ubicación</label
+                >
+                <input
+                  formControlName="location"
+                  class="input input-bordered focus:input-primary bg-base-200/30"
+                  placeholder="📍 Ciudad"
+                />
               </div>
             </div>
 
@@ -44,27 +76,50 @@
               <label class="label font-bold text-xs uppercase tracking-widest opacity-60">
                 Fotos ({{ previewImages().length }}/{{ MAX_IMAGES }})
               </label>
-              <input #fileInput type="file" multiple accept="image/*" (change)="onFileChange($event)" 
-                     class="file-input file-input-bordered file-input-primary w-full" 
-                     [disabled]="previewImages().length >= MAX_IMAGES" />
-              
+              <input
+                #fileInput
+                type="file"
+                multiple
+                accept="image/*"
+                (change)="onFileChange($event)"
+                class="file-input file-input-bordered file-input-accent w-full"
+                [disabled]="previewImages().length >= MAX_IMAGES"
+              />
+
               <!-- Previsualización más grande -->
               <div class="flex flex-wrap gap-3 mt-4" *ngIf="previewImages().length > 0">
                 <div *ngFor="let img of previewImages(); let i = index" class="relative group">
-                  <img [src]="img" class="w-20 h-20 object-cover rounded-xl border-2 border-primary/10 shadow-md transition-transform group-hover:scale-105" />
-                  <button type="button" (click)="removeImage(i)" 
-                          class="absolute -top-2 -right-2 btn btn-xs btn-circle btn-error shadow-lg">✕</button>
+                  <img
+                    [src]="img"
+                    class="w-20 h-20 object-cover rounded-xl border-2 border-primary/10 shadow-md transition-transform group-hover:scale-105"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeImage(i)"
+                    class="absolute -top-2 -right-2 btn btn-xs btn-circle btn-error shadow-lg"
+                  >
+                    ✕
+                  </button>
                 </div>
               </div>
             </div>
 
             <div class="form-control">
-              <label class="label font-bold text-xs uppercase tracking-widest opacity-60">Descripción</label>
-              <textarea formControlName="description" class="textarea textarea-bordered h-32 bg-base-200/30" placeholder="¿Qué lo hace especial?"></textarea>
+              <label class="label font-bold text-xs uppercase tracking-widest opacity-60"
+                >Descripción</label
+              >
+              <textarea
+                formControlName="description"
+                class="textarea textarea-bordered h-32 bg-base-200/30"
+                placeholder="¿Qué lo hace especial?"
+              ></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block text-lg shadow-xl shadow-primary/20" 
-                    [disabled]="form.invalid || loading || myPlaces().length >= 10">
+            <button
+              type="submit"
+              class="btn btn-primary btn-block text-lg shadow-xl shadow-primary/20"
+              [disabled]="form.invalid || loading || myPlaces().length >= 10"
+            >
               <span *ngIf="!loading">Publicar Destino</span>
               <span *ngIf="loading" class="loading loading-spinner"></span>
             </button>
@@ -76,8 +131,12 @@
     <!-- COLUMNA DERECHA: Mis Creaciones -->
     <div class="lg:col-span-6">
       <div class="flex items-center justify-between mb-8">
-        <h2 class="text-4xl font-black text-primary tracking-tighter italic">Mis <span class="text-secondary">Creaciones</span></h2>
-        <div class="badge badge-lg badge-primary badge-outline font-bold shadow-sm">{{ myPlaces().length }} Destinos</div>
+        <h2 class="text-4xl font-black text-primary tracking-tighter italic">
+          Mis <span class="text-secondary">Creaciones</span>
+        </h2>
+        <div class="badge badge-lg badge-primary badge-outline font-bold shadow-sm">
+          {{ myPlaces().length }} Destino(s)
+        </div>
       </div>
 
       <!-- Spinner -->
@@ -86,8 +145,10 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="!loadingMyPlaces() && myPlaces().length === 0" 
-           class="bg-base-100/40 border-4 border-dashed border-primary/5 rounded-[3rem] p-20 text-center animate-pulse">
+      <div
+        *ngIf="!loadingMyPlaces() && myPlaces().length === 0"
+        class="bg-base-100/40 border-4 border-dashed border-primary/5 rounded-[3rem] p-20 text-center animate-pulse"
+      >
         <span class="text-8xl mb-6 block">🗺️</span>
         <h3 class="text-2xl font-black opacity-40">Tu mapa está vacío</h3>
         <p class="opacity-40 font-medium">¡Comienza a crear tu primera aventura!</p>
@@ -95,30 +156,74 @@
 
       <!-- Grid con Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8" *ngIf="myPlaces().length > 0">
-        <div *ngFor="let place of myPlaces()" class="group card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-500 border border-base-200">
+        <div
+          *ngFor="let place of myPlaces()"
+          class="group card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-500 border border-base-200"
+        >
           <figure class="h-56 relative overflow-hidden">
-            <img [src]="place.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+            <img
+              [src]="place.image"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
             <div class="absolute top-4 right-4">
-              <div class="badge badge-secondary font-black p-4 shadow-xl uppercase text-[10px] tracking-widest">{{ place.category }}</div>
+              <div
+                class="badge badge-secondary font-black p-4 shadow-xl uppercase text-[10px] tracking-widest"
+              >
+                {{ place.category }}
+              </div>
             </div>
           </figure>
           <div class="card-body p-6">
-            <h3 class="text-2xl font-bold text-primary group-hover:translate-x-1 transition-transform italic">{{ place.name }}</h3>
+            <h3
+              class="text-2xl font-bold text-primary group-hover:translate-x-1 transition-transform italic"
+            >
+              {{ place.name }}
+            </h3>
             <div class="flex items-center gap-2 text-sm font-medium opacity-50 mb-4">
               <span class="text-secondary">📍</span> {{ place.location }}
             </div>
-            <div class="card-actions justify-end">
+            <div class="card-actions justify-between">
+              <!-- BOTÓN VER -->
+              <button
+                class="btn btn-primary btn-sm btn-outline gap-2"
+                (click)="viewPlace(place.id)"
+              >
+                Ver
+              </button>
+
+              <!-- BOTÓN BORRAR -->
+              <button
+                class="btn btn-error btn-sm btn-ghost hover:btn-error group/btn transition-all gap-2"
+                (click)="deletePlace(place.id)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                <span>Borrar</span>
+              </button>
+            </div>
+            <!-- <div class="card-actions justify-end">
               <button class="btn btn-error btn-sm btn-ghost hover:btn-error group/btn transition-all gap-2" (click)="deletePlace(place.id)">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
                 <span>Borrar</span>
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
