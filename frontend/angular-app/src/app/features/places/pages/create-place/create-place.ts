@@ -145,12 +145,12 @@ export class CreatePlace {
   }
 
   loadMyPlaces() {
-    this.loadingMyPlaces.set(true); // 🔥 Usa .set(true)
+    this.loadingMyPlaces.set(true); 
 
     this.placeService.getMyPlaces().subscribe({
       next: (places) => {
         this.myPlaces.set(places);
-        this.loadingMyPlaces.set(false); // 🔥 Usa .set(false)
+        this.loadingMyPlaces.set(false); 
       },
       error: (err) => {
         console.error(err);

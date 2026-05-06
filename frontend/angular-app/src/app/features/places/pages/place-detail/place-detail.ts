@@ -8,6 +8,7 @@ import { ReviewService } from '../../../../core/services/review.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { FavoriteService } from '../../../../core/services/favorite.service';
+import * as L from 'leaflet';
 @Component({
   selector: 'app-place-detail',
   standalone: true,
@@ -47,6 +48,22 @@ export class PlaceDetail implements OnInit {
     comment: '',
   });
 
+  // Mapa
+  private map: any;
+
+  initMap(lat: number, lng: number) {
+    if (this.map) return; // evita duplicados
+
+    this.map = L.map('map').setView([lat, lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(this.map);
+
+    // Marker FIJO (no draggable)
+    L.marker([lat, lng]).addTo(this.map);
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -56,6 +73,13 @@ export class PlaceDetail implements OnInit {
           this.selectedImage.set(data.image);
           this.loadReviews(id);
           this.loading.set(false);
+
+          const loc = data.location;
+          if (loc?.lat && loc?.lng) {
+            setTimeout(() => {
+              this.initMap(loc.lat, loc.lng);
+            }, 0);
+          }
         },
         error: (err) => {
           console.error('Error:', err);
