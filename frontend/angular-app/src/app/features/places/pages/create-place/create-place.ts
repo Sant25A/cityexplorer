@@ -3,7 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { PlaceService } from '../../../../core/services/place.service';
 import { Router } from '@angular/router';
-
+import * as L from 'leaflet';
+// Fix para los iconos de Leaflet en Angular
+const iconRetinaUrl = 'leaflet/marker-icon-2x.png';
+const iconUrl = 'leaflet/marker-icon.png';
+const shadowUrl = 'leaflet/marker-shadow.png';
+const iconDefault = L.icon({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+});
+L.Marker.prototype.options.icon = iconDefault;
 @Component({
   selector: 'app-create-place',
   standalone: true,
@@ -24,6 +39,15 @@ export class CreatePlace {
 
   files: File[] = [];
   previewImages = signal<string[]>([]);
+
+  // Variables para mapa
+  map!: L.Map;
+  marker!: L.Marker;
+
+  selectedLat = signal<number | null>(null);
+  selectedLng = signal<number | null>(null);
+  selectedAddress = signal<string>('');
+  selectedCity = signal<string>('');
 
   categories = [
     'cafe',
@@ -48,8 +72,73 @@ export class CreatePlace {
     name: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
     category: ['', Validators.required],
-    location: ['', Validators.required],
+    // location: ['', Validators.required],
   });
+
+  ngAfterViewInit() {
+    this.initMap();
+  }
+
+  initMap() {
+    this.map = L.map('map').setView([19.2826, -99.6557], 13); // Toluca default
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(this.map);
+
+    this.map.on('click', (e: any) => {
+      const { lat, lng } = e.latlng;
+
+      this.setMarker(lat, lng);
+      this.reverseGeocode(lat, lng);
+    });
+  }
+
+  setMarker(lat: number, lng: number) {
+    this.selectedLat.set(lat);
+    this.selectedLng.set(lng);
+
+    if (this.marker) {
+      this.marker.setLatLng([lat, lng]);
+    } else {
+      this.marker = L.marker([lat, lng]).addTo(this.map);
+    }
+  }
+
+  reverseGeocode(lat: number, lng: number) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+      .then((res) => res.json())
+      .then((data) => {
+        this.selectedAddress.set(data.display_name || 'Dirección no encontrada');
+        this.selectedCity.set(
+          data.address?.city || data.address?.town || data.address?.village || 'Sin ciudad',
+        );
+      })
+      .catch(() => {
+        this.selectedAddress.set('Error obteniendo dirección');
+      });
+  }
+
+  useMyLocation() {
+    if (!navigator.geolocation) {
+      alert('Geolocalización no soportada');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        this.map.setView([lat, lng], 15);
+        this.setMarker(lat, lng);
+        this.reverseGeocode(lat, lng);
+      },
+      () => {
+        alert('No se pudo obtener ubicación');
+      },
+    );
+  }
 
   ngOnInit() {
     this.loadMyPlaces();
@@ -130,7 +219,17 @@ export class CreatePlace {
     formData.append('name', this.form.value.name!);
     formData.append('description', this.form.value.description!);
     formData.append('category', this.form.value.category!);
-    formData.append('location', this.form.value.location!);
+    // formData.append('location', this.form.value.location!);
+    if (!this.selectedLat() || !this.selectedLng()) {
+      alert('Selecciona una ubicación en el mapa');
+      this.loading = false;
+      return;
+    }
+
+    formData.append('address', this.selectedAddress());
+    formData.append('city', this.selectedCity());
+    formData.append('lat', String(this.selectedLat()));
+    formData.append('lng', String(this.selectedLng()));
 
     // Archivos
     this.files.forEach((file) => {

@@ -60,14 +60,25 @@
                 </select>
               </div>
               <div class="form-control">
-                <label class="label font-bold text-xs uppercase tracking-widest opacity-60"
-                  >Ubicación</label
-                >
-                <input
-                  formControlName="location"
-                  class="input input-bordered focus:input-primary bg-base-200/30"
-                  placeholder="📍 Ciudad"
-                />
+                <div class="form-control">
+                  <label class="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Ubicación (click en el mapa)
+                  </label>
+
+                  <div id="map" class="h-64 w-full rounded-xl border"></div>
+
+                  <p class="text-xs mt-2 opacity-60">
+                    {{ selectedAddress() || 'Selecciona un punto en el mapa...' }}
+                  </p>
+
+                  <button
+                    type="button"
+                    class="btn btn-accent textarea-md shadow-xl shadow-primary/12"
+                    (click)="useMyLocation()"
+                  >
+                    Usar mi ubicación
+                  </button>
+                </div>
               </div>
             </div>
 
