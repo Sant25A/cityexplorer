@@ -20,6 +20,7 @@ export class PlacesList implements OnInit {
   selectedCity = signal<string>('');
   selectedCategory = signal<string>('');
   sort = signal<string>('newest');
+  cities = signal<string[]>([]);
 
   // Señales para datos y estado
   places = signal<Place[]>([]);
@@ -35,6 +36,7 @@ export class PlacesList implements OnInit {
 
   ngOnInit() {
     this.fetchPlaces();
+    this.fetchCities();
   }
 
   fetchPlaces() {
@@ -43,7 +45,7 @@ export class PlacesList implements OnInit {
     const params: any = {
       page: this.page(),
       limit: this.limit(),
-      sort: this.sort()
+      sort: this.sort(),
     };
 
     if (this.search()) params.search = this.search();
@@ -60,6 +62,17 @@ export class PlacesList implements OnInit {
         console.error('Error fetching places:', err);
         this.places.set([]);
         this.loading.set(false);
+      },
+    });
+  }
+
+  fetchCities() {
+    this.placeService.getCities().subscribe({
+      next: (res: any) => {
+        this.cities.set(res.cities || []);
+      },
+      error: (err) => {
+        console.error('Error fetching cities:', err);
       },
     });
   }
@@ -82,13 +95,13 @@ export class PlacesList implements OnInit {
   }
 
   onToggleFavorite(place: Place) {
-  this.places.update(currentPlaces => {
-    return currentPlaces.map(p => {
-      if (p.id === place.id) {
-        return { ...p, isFavorite: !p.isFavorite };
-      }
-      return p;
+    this.places.update((currentPlaces) => {
+      return currentPlaces.map((p) => {
+        if (p.id === place.id) {
+          return { ...p, isFavorite: !p.isFavorite };
+        }
+        return p;
+      });
     });
-  });
-}
+  }
 }

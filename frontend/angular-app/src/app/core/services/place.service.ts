@@ -41,6 +41,10 @@ export class PlaceService {
     );
   }
 
+  getCities() {
+    return this.api.get('places/cities');
+  }
+
   getPlaceById(id: string): Observable<any> {
     const place$ = this.api.get(`places/${id}`);
 
