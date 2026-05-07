@@ -35,29 +35,34 @@ const placeSchema = new mongoose.Schema(
       ]
     },
     location: {
-      type: String,
-      trim: true,
-      required: [true, 'La ubicación es obligatoria'],
+      address: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      lat: {
+        type: Number,
+        required: true,
+      },
+      lng: {
+        type: Number,
+        required: true,
+      },
+      // coordinates: {
+      //   type: {
+      //     type: String,
+      //     enum: ['Point'],
+      //     default: 'Point',
+      //   },
+      //   coordinates: {
+      //     type: [Number], // [lng, lat]
+      //     required: true,
+      //   },
+      // },
     },
-    // location: {
-    //   name: {
-    //     type: String,
-    //     required: true,
-    //   },
-    //   lat: {
-    //     type: Number,
-    //     required: true,
-    //   },
-    //   lng: {
-    //     type: Number,
-    //     required: true,
-    //   }
-    // },
-    // images: [
-    //   {
-    //     type: String,
-    //   },
-    // ],
     images: [
       {
         url: {
@@ -82,16 +87,18 @@ const placeSchema = new mongoose.Schema(
   }
 );
 
-// Búsqueda de texto
 placeSchema.index({
   name: 'text',
   description: 'text',
-  location: 'text'
+  "location.address": 'text',
+  "location.city": 'text'
 });
 
 // Filtros y ordenamiento
 placeSchema.index({ category: 1 });
 placeSchema.index({ createdAt: -1 });
 placeSchema.index({ averageRating: -1 });
+placeSchema.index({ "location.lat": 1, "location.lng": 1 });
+// placeSchema.index({ 'location.coordinates': '2dsphere' });
 
 module.exports = mongoose.model('Place', placeSchema);

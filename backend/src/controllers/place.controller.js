@@ -6,14 +6,14 @@ const Favorite = require('../models/Favorite');
 
 // Crear nuevo lugar
 exports.createPlace = async (req, res) => {
-    console.log('Body recibidos:', req.body); // Debug: Verificar datos del formulario
-    console.log('Archivos recibidos:', req.files); // Debug: Verificar archivos recibidos
+    console.log('Body recibidos:', req.body); 
+    console.log('Archivos recibidos:', req.files); 
 
     try {
-        const { name, description, category, location } = req.body;
+        const { name, description, category, address, city, lat, lng } = req.body;
 
         // Validaciones
-        if (!name?.trim() || !description.trim() || !category || !location.trim()) {
+        if (!name?.trim() || !description.trim() || !category || !address?.trim() || !city?.trim()) {
             return res.status(400).json({
                 message: 'Todos los campos son obligatorios'
             });
@@ -31,7 +31,12 @@ exports.createPlace = async (req, res) => {
             });
         }
 
-        // Dentro de exports.createPlace en el backend
+        if (!address || !city || !lat || !lng) {
+            return res.status(400).json({
+                message: 'Ubicación incompleta'
+            });
+        }
+
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({
                 message: 'Debes subir al menos una imagen'
@@ -47,7 +52,6 @@ exports.createPlace = async (req, res) => {
             });
         }
 
-        // let imageUrls = [];
         let images = [];
 
         // Subir imágenes si existen
@@ -66,7 +70,6 @@ exports.createPlace = async (req, res) => {
                         },
                         (error, result) => {
                             if (error) reject(error);
-                            // else resolve(result.secure_url);
                             else resolve({
                                 url: result.secure_url,
                                 public_id: result.public_id
@@ -78,7 +81,6 @@ exports.createPlace = async (req, res) => {
                 });
             });
 
-            // imageUrls = await Promise.all(uploadPromises);
             images = await Promise.all(uploadPromises);
         }
 
@@ -87,9 +89,13 @@ exports.createPlace = async (req, res) => {
             name,
             description,
             category,
-            location,
+            location: {
+                address,
+                city,
+                lat,
+                lng
+            },
             user: req.user.id,
-            // images: imageUrls
             images
         });
 
