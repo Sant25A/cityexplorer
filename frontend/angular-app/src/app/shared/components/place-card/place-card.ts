@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { FavoriteService } from '../../../core/services/favorite.service';
+import { Place } from '../../../shared/models/place.model';
 @Component({
   selector: 'app-place-card',
   standalone: true,
@@ -12,7 +13,7 @@ import { FavoriteService } from '../../../core/services/favorite.service';
   styleUrl: './place-card.css',
 })
 export class PlaceCard {
-  @Input() place: any;
+  @Input() place!: Place;
 
   @Output() toggleFavorite = new EventEmitter<any>();
 
@@ -29,7 +30,7 @@ export class PlaceCard {
     }
 
     // Obtener el ID de ambas formas
-    const placeId = this.place.id || this.place._id;
+    const placeId = this.place.id;
 
     if (!placeId) {
       console.error('No se encontró el ID del lugar', this.place);
