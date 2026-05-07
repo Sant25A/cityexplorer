@@ -202,13 +202,21 @@
                   >Tu calificación</label
                 >
                 <div class="rating rating-lg gap-1 justify-center py-2">
+                  <!-- Radio oculto para estado vacío -->
+                  <input
+                    type="radio"
+                    name="rating-form"
+                    class="rating-hidden"
+                    [checked]="newReview.rating === 0"
+                  />
+
                   <input
                     *ngFor="let r of [1, 2, 3, 4, 5]"
                     type="radio"
                     name="rating-form"
                     class="mask mask-star-2 bg-yellow-400"
-                    (click)="newReview.rating = r"
                     [checked]="newReview.rating === r"
+                    (change)="newReview.rating = r"
                   />
                 </div>
               </div>
