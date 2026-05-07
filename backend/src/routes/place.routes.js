@@ -9,7 +9,8 @@ const {
   getPlaceById, 
   updatePlace,
   deletePlace, 
-  getMyPlaces 
+  getMyPlaces,
+  getCities 
 } = require('../controllers/place.controller');
 
 /* RUTAS PÚBLICAS */
@@ -18,6 +19,7 @@ router.get('/', getPlaces);
 // Obtener lugares por usuario (Protegida pero se carga antes que por id)
 router.get('/me', protect, getMyPlaces);
 // Obtener lugar por ID
+router.get('/cities', getCities);
 router.get('/:id', getPlaceById);
 
 /* RUTAS PROTEGIDAS */

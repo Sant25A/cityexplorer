@@ -6,8 +6,8 @@ const Favorite = require('../models/Favorite');
 
 // Crear nuevo lugar
 exports.createPlace = async (req, res) => {
-    console.log('Body recibidos:', req.body); 
-    console.log('Archivos recibidos:', req.files); 
+    console.log('Body recibidos:', req.body);
+    console.log('Archivos recibidos:', req.files);
 
     try {
         const { name, description, category, address, city, lat, lng } = req.body;
@@ -133,14 +133,23 @@ exports.getPlaces = async (req, res) => {
             filter.category = category;
         }
 
-        // Filtro por ubicación (búsqueda parcial, insensible a mayúsculas)
+        // Filtro por ciudad
         if (req.query.location) {
-            filter.location = { $regex: req.query.location, $options: 'i' };
+            filter['location.city'] = {
+                $regex: req.query.location,
+                $options: 'i'
+            };
         }
 
         // Busqueda por texto
         if (search) {
-            filter.$text = { $search: search };
+            filter.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+                { category: { $regex: search, $options: 'i' } },
+                { 'location.city': { $regex: search, $options: 'i' } },
+                { 'location.address': { $regex: search, $options: 'i' } },
+            ];
         }
 
         // Paginación
@@ -181,6 +190,27 @@ exports.getPlaces = async (req, res) => {
 
     } catch (error) {
         console.error('Error al obtener lugares: ', error);
+        res.status(500).json({
+            message: 'Error del servidor'
+        });
+    }
+};
+
+// Obtener ciudades únicas
+exports.getCities = async (req, res) => {
+    try {
+        const cities = await Place.distinct('location.city');
+
+        // Ordenar alfabéticamente
+        cities.sort((a, b) => a.localeCompare(b));
+
+        res.status(200).json({
+            cities
+        });
+
+    } catch (error) {
+        console.error('Error obteniendo ciudades:', error);
+
         res.status(500).json({
             message: 'Error del servidor'
         });
