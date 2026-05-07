@@ -16,7 +16,7 @@ const iconDefault = L.icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 });
 L.Marker.prototype.options.icon = iconDefault;
 @Component({
@@ -145,12 +145,12 @@ export class CreatePlace {
   }
 
   loadMyPlaces() {
-    this.loadingMyPlaces.set(true); 
+    this.loadingMyPlaces.set(true);
 
     this.placeService.getMyPlaces().subscribe({
       next: (places) => {
         this.myPlaces.set(places);
-        this.loadingMyPlaces.set(false); 
+        this.loadingMyPlaces.set(false);
       },
       error: (err) => {
         console.error(err);
