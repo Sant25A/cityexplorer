@@ -50,18 +50,7 @@ const placeSchema = new mongoose.Schema(
       lng: {
         type: Number,
         required: true,
-      },
-      // coordinates: {
-      //   type: {
-      //     type: String,
-      //     enum: ['Point'],
-      //     default: 'Point',
-      //   },
-      //   coordinates: {
-      //     type: [Number], // [lng, lat]
-      //     required: true,
-      //   },
-      // },
+      }
     },
     images: [
       {
@@ -99,6 +88,5 @@ placeSchema.index({ category: 1 });
 placeSchema.index({ createdAt: -1 });
 placeSchema.index({ averageRating: -1 });
 placeSchema.index({ "location.lat": 1, "location.lng": 1 });
-// placeSchema.index({ 'location.coordinates': '2dsphere' });
 
 module.exports = mongoose.model('Place', placeSchema);
