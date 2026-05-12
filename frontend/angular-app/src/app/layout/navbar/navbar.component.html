@@ -1,37 +1,90 @@
-<nav class="navbar bg-base-100 border-b-4 border-secondary/20 px-6">
+<!-- Desde aqui debe estar el commit diegooooooooo -->
+<nav class="navbar bg-base-100 border-b border-secondary/20 px-4 sm:px-6 md:px-8">
+  <!-- IZQUIERDA (LOGO) -->
   <div class="flex-1">
-    <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold text-primary">
-      <img src="images/CityExplorer.png" alt="Logo" class="w-11 h-10 object-contain" />
-      <span>CityExplorer</span>
+    <a
+      routerLink="/"
+      class="flex items-center gap-2 text-lg sm:text-xl md:text-2xl font-bold text-primary"
+    >
+      <img
+        src="images/CityExplorer.png"
+        alt="Logo"
+        class="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-10 object-contain"
+      />
+      <span class="hidden sm:block">CityExplorer</span>
     </a>
   </div>
 
-  <div class="flex-none gap-2">
+  <!-- MENU DESKTOP -->
+  <div class="hidden md:flex items-center gap-2">
+    <a routerLink="/" class="btn btn-ghost btn-sm md:btn-md">Inicio</a>
+    <a routerLink="/places" class="btn btn-ghost btn-sm md:btn-md">Lugares</a>
 
-    <!-- Siempre visibles -->
-    <a routerLink="/" class="btn btn-ghost">Inicio</a>
-    <a routerLink="/places" class="btn btn-ghost">Lugares</a>
-
-    <!-- SOLO LOGUEADO -->
+    <!-- LOGUEADO -->
     <ng-container *ngIf="isLoggedIn">
-      <a routerLink="/favorites" class="btn btn-ghost">Favoritos</a>
-      <a routerLink="/create-place" class="btn btn-ghost">Crear lugar</a>
+      <a routerLink="/favorites" class="btn btn-ghost btn-sm md:btn-md">Favoritos</a>
+      <a routerLink="/create-place" class="btn btn-ghost btn-sm md:btn-md">Crear</a>
 
-      <!-- Usuario -->
-      <span class="ml-2 font-semibold text-primary">
+      <span class="ml-2 text-sm md:text-base font-semibold text-primary">
         👋 {{ user?.username }}
       </span>
 
-      <!-- Logout -->
-      <button (click)="logout()" class="btn btn-error btn-sm ml-2">
-        Logout
-      </button>
+      <button (click)="logout()" class="btn btn-error btn-sm md:btn-md ml-2">Logout</button>
     </ng-container>
 
-    <!-- SOLO NO LOGUEADO -->
+    <!-- NO LOGUEADO -->
     <ng-container *ngIf="!isLoggedIn">
-      <a routerLink="/login" class="btn btn-primary btn-sm ml-2">Login</a>
+      <a routerLink="/login" class="btn btn-primary btn-sm md:btn-md ml-2"> Login </a>
     </ng-container>
+  </div>
 
+  <!-- BOTÓN HAMBURGUESA (MÓVIL) -->
+  <div class="md:hidden">
+    <button (click)="toggleMenu()" class="btn btn-ghost btn-sm">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
+    </button>
   </div>
 </nav>
+
+<!-- MENÚ MÓVIL -->
+<div
+  *ngIf="menuOpen"
+  class="md:hidden px-4 pt-3 pb-4 space-y-2 bg-base-100 border-b border-secondary/20"
+>
+  <a (click)="closeMenu()" routerLink="/" class="block btn btn-ghost w-full text-left">Inicio</a>
+  <a (click)="closeMenu()" routerLink="/places" class="block btn btn-ghost w-full text-left"
+    >Lugares</a
+  >
+
+  <!-- LOGUEADO -->
+  <ng-container *ngIf="isLoggedIn">
+    <a (click)="closeMenu()" routerLink="/favorites" class="block btn btn-ghost w-full text-left"
+      >Favoritos</a
+    >
+    <a (click)="closeMenu()" routerLink="/create-place" class="block btn btn-ghost w-full text-left"
+      >Crear lugar</a
+    >
+
+    <div class="text-sm font-semibold text-primary mt-2">👋 {{ user?.username }}</div>
+
+    <button (click)="logout(); closeMenu()" class="btn btn-error w-full mt-2">Logout</button>
+  </ng-container>
+
+  <!-- NO LOGUEADO -->
+  <ng-container *ngIf="!isLoggedIn">
+    <a (click)="closeMenu()" routerLink="/login" class="btn btn-primary w-full mt-2"> Login </a>
+  </ng-container>
+</div>

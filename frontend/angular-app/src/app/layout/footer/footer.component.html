@@ -1,10 +1,85 @@
-<footer class="footer footer-center p-10 bg-base-100 text-base-content rounded border-t border-base-300">
-    <nav class="grid grid-flow-col gap-4">
-        <a class="link link-hover">Sobre nosotros</a>
-        <a class="link link-hover">Contacto</a>
-        <a class="link link-hover">Privacidad</a>
-    </nav>
-    <aside>
-        <p>© 2026 CityExplorer - Todos los derechos reservados</p>
-    </aside>
+<footer class="text-base-content border-t border-base-300 pt-16 pb-8 px-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+    
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
+        <div class="p-2 bg-primary rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <span class="text-2xl font-black tracking-tighter text-primary italic">CityExplorer</span>
+      </div>
+      <p class="text-sm opacity-70 leading-relaxed font-light">
+        Tu guía definitiva para descubrir rincones mágicos, sabores únicos y experiencias inolvidables en el corazón de la ciudad.
+      </p>
+    </div>
+
+    <div>
+      <h3 class="footer-title opacity-100 text-primary mb-6">Explora</h3>
+      <div class="flex flex-col gap-3">
+        <button (click)="toggleSection('about')" class="link link-hover text-sm flex items-center gap-2 group">
+          <span class="h-1 w-0 bg-secondary transition-all group-hover:w-2"></span> Sobre nosotros
+        </button>
+        <button (click)="toggleSection('privacy')" class="link link-hover text-sm flex items-center gap-2 group">
+          <span class="h-1 w-0 bg-secondary transition-all group-hover:w-2"></span> Privacidad
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="footer-title opacity-100 text-primary mb-6">Soporte</h3>
+      <div class="space-y-3 text-sm">
+        <p class="flex items-center gap-3 opacity-70">
+          <span class="text-secondary">✉️</span> contacto@cityexplorer.com
+        </p>
+        <p class="flex items-center gap-3 opacity-70">
+          <span class="text-secondary">📞</span> +52 722 123 4567
+        </p>
+        <p class="flex items-center gap-3 opacity-70 italic">
+          <span class="text-secondary">📍</span> Toluca, Edo. de México
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="footer-title opacity-100 text-primary mb-6">Comunidad</h3>
+      <div class="flex gap-4">
+        <a href="#" class="btn btn-ghost btn-circle hover:bg-primary hover:text-white transition-all duration-500">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="btn btn-ghost btn-circle hover:bg-secondary hover:text-white transition-all duration-500">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+        </a>
+        <a href="#" class="btn btn-ghost btn-circle hover:bg-accent hover:text-white transition-all duration-500">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+        </a>
+      </div>
+      <div class="mt-6">
+        <span class="badge badge-outline badge-sm opacity-50 font-bold tracking-widest uppercase">Version 1.2.0</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="activeSection" class="max-w-4xl mx-auto bg-base-100 p-8 rounded-3xl border border-primary/10 shadow-xl mb-12 animate-fade-in-up">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-2xl font-black text-primary capitalize">{{ activeSection === 'about' ? 'Sobre Nosotros' : 'Privacidad' }}</h3>
+      <button (click)="activeSection = null" class="btn btn-xs btn-circle btn-ghost">✕</button>
+    </div>
+    
+    <div [ngSwitch]="activeSection">
+      <p *ngSwitchCase="'about'" class="opacity-80 leading-relaxed italic">
+        "CityExplorer nació en el 2026 de la mano de Ana Itzel y Diego Andrade, con el propósito de conectar a las personas con su entorno. Creemos que cada calle tiene una historia y cada café un sabor único que merece ser compartido."
+      </p>
+      <p *ngSwitchCase="'privacy'" class="opacity-80 leading-relaxed text-sm">
+        Tu privacidad es sagrada. En CityExplorer, tus datos de ubicación y preferencias solo se procesan para darte recomendaciones personalizadas. No vendemos tus datos a terceros y usamos cifrado de nivel bancario para proteger tu cuenta.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-base-300 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-medium">
+    <p>© {{ anioActual }} CityExplorer Project. Hecho con ❤️ para el mundo.</p>
+
+  </div>
 </footer>
