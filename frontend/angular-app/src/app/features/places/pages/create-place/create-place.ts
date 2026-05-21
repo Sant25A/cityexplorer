@@ -4,6 +4,9 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { PlaceService } from '../../../../core/services/place.service';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/comfirm-modal';
+
 // Fix para los iconos de Leaflet en Angular
 const iconRetinaUrl = 'leaflet/marker-icon-2x.png';
 const iconUrl = 'leaflet/marker-icon.png';
@@ -22,7 +25,7 @@ L.Marker.prototype.options.icon = iconDefault;
 @Component({
   selector: 'app-create-place',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './create-place.html',
   styleUrl: './create-place.css',
 })
@@ -32,6 +35,7 @@ export class CreatePlace {
   private fb = inject(FormBuilder);
   private placeService = inject(PlaceService);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   // Lugares creados por el usuario
   myPlaces = signal<any[]>([]);
@@ -66,13 +70,16 @@ export class CreatePlace {
   images = signal<string[]>([]);
   readonly MAX_IMAGES = 5;
 
+  // Variables para el modal de confirmación
+  showDeleteModal = signal(false);
+  placeToDelete = signal<string | null>(null);
+
   loading = false;
 
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
     category: ['', Validators.required],
-    // location: ['', Validators.required],
   });
 
   ngAfterViewInit() {
@@ -121,7 +128,7 @@ export class CreatePlace {
 
   useMyLocation() {
     if (!navigator.geolocation) {
-      alert('Geolocalización no soportada');
+      this.notify.error('Geolocalización no soportada');
       return;
     }
 
@@ -135,7 +142,7 @@ export class CreatePlace {
         this.reverseGeocode(lat, lng);
       },
       () => {
-        alert('No se pudo obtener ubicación');
+        this.notify.error('No se pudo obtener ubicación');
       },
     );
   }
@@ -164,7 +171,7 @@ export class CreatePlace {
     if (!files) return;
 
     if (this.previewImages().length >= this.MAX_IMAGES) {
-      alert(`Máximo ${this.MAX_IMAGES} imágenes permitidas`);
+      this.notify.error(`Máximo ${this.MAX_IMAGES} imágenes permitidas`);
       this.resetFileInput();
       return;
     }
@@ -206,7 +213,7 @@ export class CreatePlace {
   onSubmit() {
     if (this.form.invalid || this.loading || this.files.length === 0) {
       if (this.files.length === 0) {
-        alert('Por favor completa el formulario y agrega al menos una imagen');
+        this.notify.warning('Por favor completa el formulario y agrega al menos una imagen');
       }
       return;
     }
@@ -221,7 +228,7 @@ export class CreatePlace {
     formData.append('category', this.form.value.category!);
     // formData.append('location', this.form.value.location!);
     if (!this.selectedLat() || !this.selectedLng()) {
-      alert('Selecciona una ubicación en el mapa');
+      this.notify.error('Selecciona una ubicación en el mapa');
       this.loading = false;
       return;
     }
@@ -240,29 +247,44 @@ export class CreatePlace {
       next: (place) => {
         this.loadMyPlaces();
         this.router.navigate(['/places', place.id]);
+        this.notify.success('Lugar creado exitosamente');
       },
       error: (err) => {
         console.error('Error:', err);
         this.loading = false;
-        alert('Hubo un error al crear el lugar');
+        this.notify.error('Hubo un error al crear el lugar');
       },
     });
   }
 
-  deletePlace(id: string) {
-    const confirmDelete = confirm('¿Seguro que quieres eliminar este lugar?');
+  openDeleteModal(id: string) {
+    this.placeToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
 
-    if (!confirmDelete) return;
+  confirmDeletePlace() {
+    const id = this.placeToDelete();
+
+    if (!id) return;
 
     this.placeService.deletePlace(id).subscribe({
       next: () => {
-        // quitar del estado local (UX rápida 🚀)
         this.myPlaces.update((prev) => prev.filter((p) => p.id !== id));
+
+        this.notify.success('Lugar eliminado correctamente');
+
+        this.showDeleteModal.set(false);
+        this.placeToDelete.set(null);
       },
       error: (err) => {
         console.error(err);
-        alert('Error al eliminar');
+        this.notify.error('Error al eliminar el lugar');
       },
     });
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.placeToDelete.set(null);
   }
 }

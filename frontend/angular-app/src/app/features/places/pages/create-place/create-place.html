@@ -205,7 +205,7 @@
               <!-- BOTÓN BORRAR -->
               <button
                 class="btn btn-error btn-sm btn-ghost hover:btn-error group/btn transition-all gap-2"
-                (click)="deletePlace(place.id)"
+                (click)="openDeleteModal(place.id)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -238,3 +238,11 @@
     </div>
   </div>
 </section>
+
+<app-confirm-modal
+  [open]="showDeleteModal()"
+  title="Eliminar lugar"
+  message="¿Seguro que quieres eliminar este lugar? Esta acción no se puede deshacer."
+  (confirm)="confirmDeletePlace()"
+  (cancel)="closeDeleteModal()"
+></app-confirm-modal>

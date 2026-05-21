@@ -9,10 +9,12 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { FavoriteService } from '../../../../core/services/favorite.service';
 import * as L from 'leaflet';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/comfirm-modal';
 @Component({
   selector: 'app-place-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ConfirmModalComponent],
   templateUrl: './place-detail.html',
   styleUrl: './place-detail.css',
 })
@@ -23,11 +25,16 @@ export class PlaceDetail implements OnInit {
   private authService = inject(AuthService);
   private favoriteService = inject(FavoriteService);
   currentUser = this.authService.getUser();
+  private notify = inject(NotificationService);
 
   // Definimos señales
   place = signal<Place | null>(null);
   loading = signal<boolean>(true);
   selectedImage = signal<string>('');
+
+  // Señales para reseñas
+  showDeleteReviewModal = signal(false);
+  reviewToDelete = signal<string | null>(null);
 
   reviews = signal<any[]>([]);
 
@@ -146,14 +153,14 @@ export class PlaceDetail implements OnInit {
         }
 
         this.place.set({ ...place, rating: Number(newAvg.toFixed(1)) });
-
+        this.notify.success('Reseña agregada exitosamente');
         // Limpiar formulario
         this.resetReviewForm();
       },
       error: (err) => {
         console.error('Error al crear review:', err);
         const errorMessage = err.error?.message || 'Hubo un error al enviar la reseña';
-        alert(errorMessage);
+        this.notify.error(errorMessage);
         this.resetReviewForm();
       },
     });
@@ -191,20 +198,40 @@ export class PlaceDetail implements OnInit {
       },
       error: (err) => {
         console.error('Error al editar:', err);
-        alert('No se pudo guardar la edición.');
+        this.notify.error('No se pudo guardar la edición.');
       },
     });
   }
 
-  deleteReview(reviewId: string) {
-    if (!confirm('¿Eliminar reseña?')) return;
+  openDeleteReviewModal(reviewId: string) {
+    this.reviewToDelete.set(reviewId);
+    this.showDeleteReviewModal.set(true);
+  }
+
+  confirmDeleteReview() {
+    const reviewId = this.reviewToDelete();
+
+    if (!reviewId) return;
 
     this.reviewService.deleteReview(reviewId).subscribe({
       next: () => {
         this.loadReviews(this.place()!.id);
+
+        this.notify.success('Reseña eliminada');
+
+        this.showDeleteReviewModal.set(false);
+        this.reviewToDelete.set(null);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.notify.error('Error al eliminar la reseña.');
+      },
     });
+  }
+
+  closeDeleteReviewModal() {
+    this.showDeleteReviewModal.set(false);
+    this.reviewToDelete.set(null);
   }
 
   // place-detail.ts
@@ -213,6 +240,7 @@ export class PlaceDetail implements OnInit {
     if (!currentPlace) return;
 
     if (!this.authService.isAuthenticated()) {
+      this.notify.error('Debes iniciar sesión para marcar como favorito');
       window.location.href = '/login';
       return;
     }
@@ -225,7 +253,10 @@ export class PlaceDetail implements OnInit {
           isFavorite: res.isFavorite,
         });
       },
-      error: (err) => console.error('Error toggle favorito:', err),
+      error: (err) => {
+        console.error('Error toggle favorito:', err);
+        this.notify.error('Error al marcar como favorito');
+      },
     });
   }
 }

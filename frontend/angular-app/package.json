@@ -19,6 +19,7 @@
     "@angular/router": "^21.2.0",
     "daisyui": "^4.12.10",
     "leaflet": "^1.9.4",
+    "ng-recaptcha": "^13.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

@@ -9,16 +9,20 @@ import {
 } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RecaptchaModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
   private fb = inject(FormBuilder);
+  private notify = inject(NotificationService);
+  captchaToken: string | null = null;
 
   submitted = false;
 
@@ -47,6 +51,10 @@ export class Register {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
+  resolvedCaptcha(token: string | null) {
+    this.captchaToken = token;
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -55,14 +63,20 @@ export class Register {
     // Con getRawValue() obtenemos los valores con el tipo correcto (string)
     const { username, email, password } = this.form.getRawValue();
 
-    this.auth.register({ username, email, password }).subscribe({
+    if (!this.captchaToken) {
+      this.notify.error('Completa el captcha');
+      return;
+    }
+
+    this.auth.register({ username, email, password, captcha: this.captchaToken } as any).subscribe({
       next: () => {
-        console.log('Registro exitoso 🚀');
+        console.log('Registro exitoso');
+        this.notify.success('¡Registro exitoso! Por favor, inicia sesión.');
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.error('Error registro:', err);
-        alert('Error al registrar usuario');
+        console.error('Error en registro:', err);
+        this.notify.error('Error al registrar usuario');
       },
     });
   }

@@ -41,7 +41,7 @@
               formControlName="username"
               autocomplete="username"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all bg-base-100/50"
-              placeholder="SantanaDev"
+              placeholder="Usuario123"
               [ngClass]="{
                 'input-error':
                   form.get('username')?.invalid && (form.get('username')?.touched || submitted),
@@ -192,10 +192,22 @@
           </label>
         </div>
 
+        <div class="form-control w-full flex justify-center items-center my-4">
+          <re-captcha
+            (resolved)="resolvedCaptcha($event)"
+            [ngClass]="{ 'border border-error rounded-lg p-1': submitted && !captchaToken }"
+          ></re-captcha>
+          <label class="label h-6" *ngIf="submitted && !captchaToken">
+            <span class="label-text-alt text-error font-medium animate-pulse">
+              Es necesario verificar que no eres un robot
+            </span>
+          </label>
+        </div>
+
         <button
           type="submit"
           class="btn btn-primary w-full shadow-lg shadow-secondary/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-none mt-2"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || !captchaToken"
         >
           Crear cuenta
           <svg

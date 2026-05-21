@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -12,6 +13,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class Login {
   private fb = inject(FormBuilder);
+  private notify = inject(NotificationService);
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -38,13 +40,13 @@ export class Login {
 
     this.auth.login(loginData).subscribe({
       next: () => {
-        console.log('Login exitoso 🚀');
+        console.log('Login exitoso');
+        this.notify.success('¡Bienvenido a CityExplorer!');
         this.router.navigate(['/']);
       },
       error: (err) => {
         console.error('Error en login:', err);
-        // NOTA: Cambiar más adelante por algo más visual 
-        alert('Credenciales incorrectas o error del servidor');
+        this.notify.error('Credenciales incorrectas');
       },
     });
   }

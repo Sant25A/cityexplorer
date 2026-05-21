@@ -1,0 +1,18 @@
+<div class="toast toast-bottom toast-end z-[9999] p-4">
+  <div
+    *ngFor="let toast of notify.messages()"
+    class="alert shadow-2xl border-none min-w-[280px] animate-fade-in-up"
+    [ngClass]="{
+      'alert-success': toast.type === 'success',
+      'alert-error': toast.type === 'error',
+      'alert-info': toast.type === 'info',
+      'alert-warning': toast.type === 'warning'
+    }"
+  >
+    <div class="flex items-center gap-3">
+      <span class="font-semibold text-sm">
+        {{ toast.message }}
+      </span>
+    </div>
+  </div>
+</div>

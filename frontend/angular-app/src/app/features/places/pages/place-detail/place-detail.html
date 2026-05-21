@@ -165,7 +165,7 @@
                     <span>✏️</span> Editar
                   </button>
                   <button
-                    (click)="deleteReview(review._id)"
+                    (click)="openDeleteReviewModal(review._id)"
                     class="text-xs font-bold text-error hover:underline flex items-center gap-1"
                   >
                     <span>🗑️</span> Eliminar
@@ -258,3 +258,11 @@
   <h2 class="text-3xl font-black">Ups, no encontramos este lugar 🏜️</h2>
   <a routerLink="/places" class="btn btn-primary mt-8">Volver a explorar</a>
 </div>
+
+<app-confirm-modal
+  [open]="showDeleteReviewModal()"
+  title="Eliminar reseña"
+  message="¿Seguro que quieres eliminar esta reseña?"
+  (confirm)="confirmDeleteReview()"
+  (cancel)="closeDeleteReviewModal()"
+></app-confirm-modal>
