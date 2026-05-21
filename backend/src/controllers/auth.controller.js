@@ -1,47 +1,67 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 exports.register = async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
+  try {
+    const { username, email, password } = req.body;
+    const { captcha } = req.body;
 
-        // 1. Validación básica
-        if (!username || !email || !password) {
-            return res.status(400).json({
-                message: 'Todos los campos son obligatorios'
-            });
-        }
-
-        // 2. Verificar si el usuario ya existe
-        const userExists = await User.findOne({ email });
-
-        if (userExists) {
-            return res.status(400).json({
-                message: 'El usuario ya existe'
-            });
-        }
-
-        // 3. Crear el usuario
-        const newUser = new User({
-            username,
-            email, 
-            password 
-        });
-
-        // 4. Guardar en DB
-        await newUser.save();
-
-        // 5. Respuesta
-        res.status(201).json({
-            message: "Usuario registrado correctamente"
-        });
-        
-    } catch (error) {
-        console.error("Error en el registro:", error);
-        res.status(500).json({
-            message: "Error del servidor"
-        });
+    // 1. Validación básica
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        message: 'Todos los campos son obligatorios'
+      });
     }
+
+    // 2. Verificar si el usuario ya existe
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(400).json({
+        message: 'El usuario ya existe'
+      });
+    }
+
+    // Validación de captcha
+    const captchaVerify = await axios.post(
+      'https://www.google.com/recaptcha/api/siteverify',
+      null,
+      {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: captcha
+        }
+      }
+    );
+
+    if (!captchaVerify.data.success) {
+      return res.status(400).json({
+        message: 'Captcha inválido'
+      });
+    }
+
+    // 3. Crear el usuario
+    const newUser = new User({
+      username,
+      email,
+      password
+    });
+
+    // 4. Guardar en DB
+    await newUser.save();
+
+    // 5. Respuesta
+    res.status(201).json({
+      message: "Usuario registrado correctamente"
+    });
+
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    res.status(500).json({
+      message: "Error del servidor"
+    });
+  }
 };
 
 exports.login = async (req, res) => {
@@ -75,20 +95,20 @@ exports.login = async (req, res) => {
 
     // 4. Generar JWT
     const token = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     // Respuesta con token
     res.status(200).json({
-        message: 'Login exitoso',
-        token,
-        user: {
-            id: user._id,
-            username: user.username,
-            email: user.email
-        }
+      message: 'Login exitoso',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+      }
     });
 
   } catch (error) {

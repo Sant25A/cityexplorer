@@ -145,10 +145,8 @@ exports.getPlaces = async (req, res) => {
         if (search) {
             filter.$or = [
                 { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
                 { category: { $regex: search, $options: 'i' } },
                 { 'location.city': { $regex: search, $options: 'i' } },
-                { 'location.address': { $regex: search, $options: 'i' } },
             ];
         }
 

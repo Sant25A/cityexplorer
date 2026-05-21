@@ -21,11 +21,18 @@ const protect = (req, res, next) => {
             return res.status(401).json({
                 message: "No autorizado, token no encontrado"
             });
-        }   
+        }
     } catch (error) {
         console.error('Error en middleware de autenticación:', error);
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                message: 'Token expirado'
+            });
+        }
+
         return res.status(401).json({
-            message: "Token inválido"
+            message: 'Token inválido'
         });
     }
 };
