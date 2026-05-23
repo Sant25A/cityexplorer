@@ -12,21 +12,6 @@ export class FavoriteService {
     return this.api.post('favorites', { placeId }).pipe(map((res: any) => res));
   }
 
-  // getFavorites() {
-  //   return this.api.get('favorites').pipe(
-  //     map((res: any) =>
-  //       res.favorites.map((f: any) => ({
-  //         ...f.place,
-  //         id: f.place._id, // Forzamos id sin guion bajo aquí
-  //         isFavorite: true,
-  //         image: f.place.images?.[0] || 'https://placehold.co/600x400',
-  //         rating: f.place.averageRating || 0,
-  //       })),
-  //     ),
-  //   );
-  // }
-  // favorite.service.ts
-
   getFavorites() {
     return this.api.get('favorites').pipe(
       map((res: any) =>

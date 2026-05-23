@@ -39,7 +39,6 @@ export class PlaceCard {
 
     this.favoriteService.toggleFavorite(placeId).subscribe({
       next: (res) => {
-        // Se crea un nuevo objeto para que Angular detecte el cambio de referencia
         this.place = {
           ...this.place,
           isFavorite: res.isFavorite,

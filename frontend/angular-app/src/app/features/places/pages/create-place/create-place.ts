@@ -113,13 +113,23 @@ export class CreatePlace {
   }
 
   reverseGeocode(lat: number, lng: number) {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=es`,
+    )
       .then((res) => res.json())
       .then((data) => {
         this.selectedAddress.set(data.display_name || 'Dirección no encontrada');
-        this.selectedCity.set(
-          data.address?.city || data.address?.town || data.address?.village || 'Sin ciudad',
-        );
+        const city =
+          data.address?.city ||
+          data.address?.town ||
+          data.address?.village ||
+          data.address?.municipality ||
+          data.address?.county ||
+          data.address?.state_district ||
+          data.address?.state ||
+          '';
+
+        this.selectedCity.set(city);
       })
       .catch(() => {
         this.selectedAddress.set('Error obteniendo dirección');
@@ -226,13 +236,17 @@ export class CreatePlace {
     formData.append('name', this.form.value.name!);
     formData.append('description', this.form.value.description!);
     formData.append('category', this.form.value.category!);
-    // formData.append('location', this.form.value.location!);
+
     if (!this.selectedLat() || !this.selectedLng()) {
       this.notify.error('Selecciona una ubicación en el mapa');
       this.loading = false;
       return;
     }
-
+    if (!this.selectedCity()?.trim()) {
+      this.notify.error('No se pudo detectar la ciudad. Intenta seleccionar otro punto cercano.');
+      this.loading = false;
+      return;
+    }
     formData.append('address', this.selectedAddress());
     formData.append('city', this.selectedCity());
     formData.append('lat', String(this.selectedLat()));

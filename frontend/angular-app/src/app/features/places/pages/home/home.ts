@@ -27,6 +27,7 @@ export class Home implements OnInit {
   loadPlaces() {
     this.loading.set(true);
 
+    // Consulta con parámetros para limitar a 6 resultados y ordenar por rating y cantidad de reviews
     const params: any = {
       limit: 6,
       sort: 'rating',

@@ -27,7 +27,6 @@ export class Register {
   submitted = false;
 
   form = this.fb.nonNullable.group(
-    // <-- Agregamos .nonNullable
     {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -60,7 +59,6 @@ export class Register {
 
     if (this.form.invalid) return;
 
-    // Con getRawValue() obtenemos los valores con el tipo correcto (string)
     const { username, email, password } = this.form.getRawValue();
 
     if (!this.captchaToken) {

@@ -24,7 +24,7 @@ export class PlaceService {
 
     // Si hay token, se cruza con favoritos
     return forkJoin({
-      res: places$ as Observable<any>, // Forzamos el tipo aquí
+      res: places$ as Observable<any>, 
       favIds: this.api
         .get('favorites')
         .pipe(map((r: any) => r.favorites.map((f: any) => f.place._id))),

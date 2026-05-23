@@ -1,0 +1,20 @@
+::ng-deep html[data-theme="cityexplorerdark"] .card-custom-dark {
+  background-color: #1d2531 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important; 
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+}
+
+::ng-deep html[data-theme="cityexplorerdark"] .card-custom-dark:hover {
+  border-color: rgba(49, 185, 245, 0.4) !important; 
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(49, 185, 245, 0.15) !important;
+}
+
+::ng-deep html[data-theme="cityexplorerdark"] .dark-btn-adjust {
+  color: #31B9F5 !important;
+  border-color: rgba(49, 185, 245, 0.4) !important;
+}
+
+::ng-deep html[data-theme="cityexplorerdark"] .dark-btn-adjust:hover {
+  color: #ffffff !important;
+  background-color: #31B9F5 !important;
+}

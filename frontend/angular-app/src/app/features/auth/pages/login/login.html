@@ -1,14 +1,31 @@
-<section class="flex items-center justify-center min-h-[calc(110vh-64px)] from-primary/10 via-base-100 to-secondary/10 px-4">
-
-  <div class="card w-full max-w-md bg-base-100/80 backdrop-blur-md shadow-2xl border border-white/20 animate-fade-in-up">
-
+<section
+  class="flex items-center justify-center min-h-[calc(110vh-64px)] from-primary/10 via-base-100 to-secondary/10 px-4"
+>
+  <div
+    class="card w-full max-w-md bg-base-100/80 backdrop-blur-md shadow-2xl border border-white/20 animate-fade-in-up"
+  >
     <div class="card-body p-8">
-      
       <div class="flex justify-center mb-2">
         <div class="p-3 bg-primary/10 rounded-full ring-8 ring-primary/5">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-10 w-10 text-primary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
         </div>
       </div>
@@ -21,7 +38,6 @@
       </p>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
-
         <div class="form-control w-full">
           <label class="label p-1">
             <span class="label-text font-semibold opacity-70">Correo electrónico</span>
@@ -32,15 +48,32 @@
               formControlName="email"
               autocomplete="username"
               class="input input-bordered w-full pl-10 focus:input-primary transition-all duration-300 bg-base-100/50"
-              placeholder="ana@cityexplorer.com"
-              [ngClass]="{'input-error': form.get('email')?.invalid && (form.get('email')?.touched || submitted)}"
+              placeholder="correo@ejemplo.com"
+              [ngClass]="{
+                'input-error':
+                  form.get('email')?.invalid && (form.get('email')?.touched || submitted),
+              }"
             />
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"
+              />
             </svg>
           </div>
           <label class="label h-6">
-            <span *ngIf="form.get('email')?.invalid && (form.get('email')?.touched || submitted)" class="label-text-alt text-error animate-pulse font-medium">
+            <span
+              *ngIf="form.get('email')?.invalid && (form.get('email')?.touched || submitted)"
+              class="label-text-alt text-error animate-pulse font-medium"
+            >
               Formato de correo no válido
             </span>
           </label>
@@ -49,7 +82,6 @@
         <div class="form-control w-full">
           <div class="flex justify-between items-center mb-1 px-1">
             <span class="label-text font-semibold opacity-70">Contraseña</span>
-            <!-- <a href="#" class="text-xs text-secondary hover:underline font-medium">¿Olvidaste tu contraseña?</a> -->
           </div>
           <div class="relative">
             <input
@@ -58,43 +90,70 @@
               class="input input-bordered w-full pl-10 focus:input-primary transition-all duration-300 bg-base-100/50"
               placeholder="••••••••"
               autocomplete="current-password"
-              [ngClass]="{'input-error': form.get('password')?.invalid && (form.get('password')?.touched || submitted)}"
+              [ngClass]="{
+                'input-error':
+                  form.get('password')?.invalid && (form.get('password')?.touched || submitted),
+              }"
             />
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
           </div>
           <label class="label h-6">
-            <span *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)" class="label-text-alt text-error animate-pulse font-medium">
+            <span
+              *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"
+              class="label-text-alt text-error animate-pulse font-medium"
+            >
               La contraseña es obligatoria
             </span>
           </label>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="btn btn-primary w-full mt-2 shadow-lg shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
           [disabled]="form.invalid"
         >
           Iniciar sesión
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 ml-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
         </button>
-
       </form>
 
       <div class="divider text-xs opacity-40 font-bold">O TAMBIÉN</div>
 
       <p class="text-center text-sm font-medium">
-        ¿Eres nuevo en CityExplorer? 
-        <a routerLink="/register" class="text-secondary font-bold hover:text-primary transition-colors cursor-pointer ml-1">
+        ¿Eres nuevo en CityExplorer?
+        <a
+          routerLink="/register"
+          class="text-secondary font-bold hover:text-primary transition-colors cursor-pointer ml-1"
+        >
           Crea tu cuenta aquí
         </a>
       </p>
-
     </div>
-
   </div>
-
 </section>

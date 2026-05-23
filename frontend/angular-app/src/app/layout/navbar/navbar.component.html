@@ -1,6 +1,4 @@
-<!-- Desde aqui debe estar el commit diegooooooooo -->
-<nav class="navbar bg-base-100 border-b border-secondary/20 px-4 sm:px-6 md:px-8">
-  <!-- IZQUIERDA (LOGO) -->
+<nav class="navbar bg-base-100 border-b-4 border-secondary/20 px-4 sm:px-6 md:px-8">
   <div class="flex-1">
     <a
       routerLink="/"
@@ -9,36 +7,73 @@
       <img
         src="images/CityExplorer.png"
         alt="Logo"
-        class="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-10 object-contain"
+        class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-10 object-contain"
       />
       <span class="hidden sm:block">CityExplorer</span>
     </a>
   </div>
 
-  <!-- MENU DESKTOP -->
   <div class="hidden md:flex items-center gap-2">
-    <a routerLink="/" class="btn btn-ghost btn-sm md:btn-md">Inicio</a>
-    <a routerLink="/places" class="btn btn-ghost btn-sm md:btn-md">Lugares</a>
+    <a
+      routerLink="/"
+      routerLinkActive="text-primary"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="btn btn-ghost btn-sm md:btn-md"
+      >Inicio</a
+    >
+    <a
+      routerLink="/places"
+      routerLinkActive="btn-primary text-primary"
+      class="btn btn-ghost btn-sm md:btn-md"
+      >Lugares</a
+    >
 
-    <!-- LOGUEADO -->
     <ng-container *ngIf="isLoggedIn">
-      <a routerLink="/favorites" class="btn btn-ghost btn-sm md:btn-md">Favoritos</a>
-      <a routerLink="/create-place" class="btn btn-ghost btn-sm md:btn-md">Crear</a>
+      <a
+        routerLink="/favorites"
+        routerLinkActive="btn-primary text-primary"
+        class="btn btn-ghost btn-sm md:btn-md"
+        >Favoritos</a
+      >
+      <a
+        routerLink="/create-place"
+        routerLinkActive="btn-primary text-primary"
+        class="btn btn-ghost btn-sm md:btn-md"
+        >Crear</a
+      >
+
+      <button
+        type="button"
+        (click)="toggleTema()"
+        class="btn btn-ghost btn-circle btn-sm md:btn-md text-xl ml-2"
+        title="Cambiar modo de pantalla"
+      >
+        <span>{{ temaActual() === 'cityexplorerdark' ? '☀️' : '🌙' }}</span>
+      </button>
 
       <span class="ml-2 text-sm md:text-base font-semibold text-primary">
-        👋 {{ user?.username }}
+        👤 {{ user?.username }}
       </span>
 
-      <button (click)="logout()" class="btn btn-error btn-sm md:btn-md ml-2">Logout</button>
+      <button (click)="logout()" class="btn bg-primary text-white btn-sm md:btn-md ml-2">
+        Cerrar sesión
+      </button>
     </ng-container>
 
-    <!-- NO LOGUEADO -->
     <ng-container *ngIf="!isLoggedIn">
-      <a routerLink="/login" class="btn btn-primary btn-sm md:btn-md ml-2"> Login </a>
+      <button
+        type="button"
+        (click)="toggleTema()"
+        class="btn btn-ghost btn-circle btn-sm md:btn-md text-xl mr-2"
+        title="Cambiar modo de pantalla"
+      >
+        <span>{{ temaActual() === 'cityexplorerdark' ? '☀️' : '🌙' }}</span>
+      </button>
+      
+      <a routerLink="/login" class="btn btn-primary btn-sm md:btn-md ml-2"> Iniciar sesión </a>
     </ng-container>
   </div>
 
-  <!-- BOTÓN HAMBURGUESA (MÓVIL) -->
   <div class="md:hidden">
     <button (click)="toggleMenu()" class="btn btn-ghost btn-sm">
       <svg
@@ -59,32 +94,61 @@
   </div>
 </nav>
 
-<!-- MENÚ MÓVIL -->
 <div
   *ngIf="menuOpen"
   class="md:hidden px-4 pt-3 pb-4 space-y-2 bg-base-100 border-b border-secondary/20"
 >
-  <a (click)="closeMenu()" routerLink="/" class="block btn btn-ghost w-full text-left">Inicio</a>
-  <a (click)="closeMenu()" routerLink="/places" class="block btn btn-ghost w-full text-left"
+  <div class="flex items-center justify-between p-2 bg-base-200/60 rounded-xl mb-3">
+    <span class="text-xs font-bold uppercase opacity-60 tracking-wider pl-1"
+      >Aspecto de la App</span
+    >
+    <button type="button" (click)="toggleTema()" class="btn btn-sm btn-circle btn-ghost text-lg">
+      {{ temaActual() === 'cityexplorerdark' ? '☀️' : '🌙' }}
+    </button>
+  </div>
+
+  <a
+    (click)="closeMenu()"
+    routerLink="/"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="btn-primary text-primary"
+    class="block btn btn-ghost w-full text-left"
+    >Inicio</a
+  >
+  <a
+    (click)="closeMenu()"
+    routerLink="/places"
+    routerLinkActive="btn-primary text-primary"
+    class="block btn btn-ghost w-full text-left"
     >Lugares</a
   >
 
-  <!-- LOGUEADO -->
   <ng-container *ngIf="isLoggedIn">
-    <a (click)="closeMenu()" routerLink="/favorites" class="block btn btn-ghost w-full text-left"
+    <a
+      (click)="closeMenu()"
+      routerLink="/favorites"
+      routerLinkActive="btn-primary text-primary"
+      class="block btn btn-ghost w-full text-left"
       >Favoritos</a
     >
-    <a (click)="closeMenu()" routerLink="/create-place" class="block btn btn-ghost w-full text-left"
+    <a
+      (click)="closeMenu()"
+      routerLink="/create-place"
+      routerLinkActive="btn-primary text-primary"
+      class="block btn btn-ghost w-full text-left"
       >Crear lugar</a
     >
 
-    <div class="text-sm font-semibold text-primary mt-2">👋 {{ user?.username }}</div>
+    <div class="text-sm font-semibold text-primary mt-2">👤 {{ user?.username }}</div>
 
-    <button (click)="logout(); closeMenu()" class="btn btn-error w-full mt-2">Logout</button>
+    <button (click)="logout(); closeMenu()" class="btn bg-primary text-white w-full mt-2">
+      Cerrar sesión
+    </button>
   </ng-container>
 
-  <!-- NO LOGUEADO -->
   <ng-container *ngIf="!isLoggedIn">
-    <a (click)="closeMenu()" routerLink="/login" class="btn btn-primary w-full mt-2"> Login </a>
+    <a (click)="closeMenu()" routerLink="/login" class="btn btn-primary w-full mt-2">
+      Iniciar sesión
+    </a>
   </ng-container>
 </div>
