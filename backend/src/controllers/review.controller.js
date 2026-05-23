@@ -70,6 +70,10 @@ exports.createReview = async (req, res) => {
             review
         });
 
+        await Place.findByIdAndUpdate(placeId, {
+            $inc: { reviewsCount: 1 }
+        });
+
     } catch (error) {
         console.error('Error al crear review:', error);
 
@@ -202,6 +206,10 @@ exports.deleteReview = async (req, res) => {
 
         res.status(200).json({
             message: 'Reseña eliminada correctamente'
+        });
+
+        await Place.findByIdAndUpdate(placeId, {
+            $inc: { reviewsCount: -1 }
         });
     } catch (error) {
         console.error('Error al eliminar review:', error);

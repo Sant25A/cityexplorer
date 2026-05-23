@@ -52,6 +52,10 @@ const placeSchema = new mongoose.Schema(
         required: true,
       }
     },
+    reviewsCount: {
+      type: Number,
+      default: 0
+    },
     images: [
       {
         url: {

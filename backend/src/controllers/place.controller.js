@@ -159,7 +159,7 @@ exports.getPlaces = async (req, res) => {
         let sortOption = {};
 
         if (sort === 'rating') {
-            sortOption = { averageRating: -1 }; // Mejores primero
+            sortOption = { averageRating: -1, reviewsCount: -1 }; // Mejores primeros y mayor cantidad de reseñas
         } else if (sort === 'newest') {
             sortOption = { createdAt: -1 }; // Más recientes
         } else if (sort === 'oldest') {
