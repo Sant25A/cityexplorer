@@ -53,9 +53,9 @@
           <!-- Rating del lado derecho -->
           <div
             class="flex items-center gap-1 badge badge-outline border-primary/20 p-3 shadow-sm bg-base-100/50"
-          >
+          > 
             <span class="text-yellow-500 font-bold text-lg">★</span>
-            <span class="font-bold text-black">{{ place()?.rating }}</span>
+            <span class="font-bold text-black">{{ (place()?.rating || 0) | number:'1.1-1' }}</span>
           </div>
         </div>
 

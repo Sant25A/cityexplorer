@@ -9,7 +9,7 @@
     />
     <div class="absolute top-4 right-4 badge badge-base-100 font-bold gap-2 p-3 shadow-lg">
       <span class="text-yellow-500 text-xl">★</span>
-      {{ place.rating || 0 }}
+      {{ (place.rating || 0) | number:'1.1-1' }}
     </div>
 
     <button
