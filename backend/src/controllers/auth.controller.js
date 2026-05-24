@@ -93,21 +93,25 @@ exports.login = async (req, res) => {
       });
     }
 
-    // 4. Generar JWT
+    // 4. Generar JWT ( Agregamos el rol al payload del Token)
     const token = jwt.sign(
-      { id: user._id },
+      {
+        id: user._id,
+        role: user.role || 'user' 
+      },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    // Respuesta con token
+    // Respuesta con token (Incluimos el rol en el objeto del usuario)
     res.status(200).json({
       message: 'Login exitoso',
       token,
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        role: user.role || 'user' 
       }
     });
 
