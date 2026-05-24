@@ -1,7 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet */
 .leaflet-container {
-  height: 100%;
   width: 100%;
+  height: 100%;
+  border-radius: 1rem;
   z-index: 1;
+}
+
+.leaflet-control-container {
+  z-index: 2;
 }
 
 .leaflet-control-attribution {
@@ -11,7 +21,3 @@
 .leaflet-popup-content-wrapper {
   border-radius: 12px;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
