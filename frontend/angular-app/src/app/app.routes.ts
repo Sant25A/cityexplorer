@@ -7,8 +7,11 @@ import { PlacesList } from './features/places/pages/places-list/places-list';
 import { FavoritesPage } from './features/favorites/pages/favorites-page/favorites-page';
 import { PlaceDetail } from './features/places/pages/place-detail/place-detail';
 import { CreatePlace } from './features/places/pages/create-place/create-place';
+import { AdminDashboard } from './features/admin/pages/admin-dashboard/admin-dashboard';
 
+// Guards
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -23,5 +26,12 @@ export const routes: Routes = [
 
   { path: 'create-place', component: CreatePlace, canActivate: [authGuard] },
 
-  { path: '**', redirectTo: '' }
+  // Ruta del planel de administración protegido por ambos guards
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboard,
+    canActivate: [authGuard, adminGuard],
+  },
+
+  { path: '**', redirectTo: '' },
 ];

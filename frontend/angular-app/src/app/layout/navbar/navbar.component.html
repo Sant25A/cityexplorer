@@ -42,6 +42,14 @@
         >Crear</a
       >
 
+      <a
+        *ngIf="auth.isAdmin()"
+        routerLink="/admin-dashboard"
+        routerLinkActive="btn-primary text-primary"
+        class="btn btn-ghost btn-sm md:btn-md border border-primary/30 text-primary bg-primary/5"
+        >Panel Admin</a
+      >
+
       <button
         type="button"
         (click)="toggleTema()"
@@ -69,7 +77,7 @@
       >
         <span>{{ temaActual() === 'cityexplorerdark' ? '☀️' : '🌙' }}</span>
       </button>
-      
+
       <a routerLink="/login" class="btn btn-primary btn-sm md:btn-md ml-2"> Iniciar sesión </a>
     </ng-container>
   </div>
@@ -137,6 +145,14 @@
       routerLinkActive="btn-primary text-primary"
       class="block btn btn-ghost w-full text-left"
       >Crear lugar</a
+    >
+    <a
+      *ngIf="auth.isAdmin()"
+      (click)="closeMenu()"
+      routerLink="/admin-dashboard"
+      routerLinkActive="btn-primary text-primary"
+      class="block btn btn-ghost w-full text-left border border-primary/20 bg-primary/5"
+      >Panel Admin</a
     >
 
     <div class="text-sm font-semibold text-primary mt-2">👤 {{ user?.username }}</div>

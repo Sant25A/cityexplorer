@@ -1,0 +1,115 @@
+<section class="max-w-7xl mx-auto p-4 md:p-8 min-h-[calc(100vh-64px)] animate-fade-in">
+  <div class="flex items-center gap-4 mb-8">
+    <div class="p-3 bg-error/10 rounded-2xl">
+      <span class="text-3xl">🛡️</span>
+    </div>
+    <div>
+      <h1 class="text-4xl font-black tracking-tight text-base-content">Panel de Control</h1>
+      <p class="text-xs opacity-60 font-medium uppercase tracking-widest text-error">
+        Área Administrativa Global
+      </p>
+    </div>
+  </div>
+
+  <div class="tabs tabs-boxed mb-8 bg-base-200 p-2 rounded-xl max-w-md">
+    <button
+      (click)="activeTab.set('users')"
+      [class.tab-active]="activeTab() === 'users'"
+      class="tab font-bold text-sm transition-all duration-300 flex-1 py-3 h-auto"
+    >
+      👥 Usuarios ({{ users().length }})
+    </button>
+    <button
+      (click)="activeTab.set('places')"
+      [class.tab-active]="activeTab() === 'places'"
+      class="tab font-bold text-sm transition-all duration-300 flex-1 py-3 h-auto"
+    >
+      🗺️ Destinos ({{ places().length }})
+    </button>
+  </div>
+
+  <div *ngIf="loading()" class="flex justify-center py-20">
+    <span class="loading loading-infinity loading-lg text-error scale-150"></span>
+  </div>
+
+  <div
+    *ngIf="!loading() && activeTab() === 'users'"
+    class="overflow-x-auto card bg-base-100 border border-base-300 shadow-xl rounded-2xl animate-fade-in"
+  >
+    <table class="table table-zebra w-full text-base-content">
+      <thead>
+        <tr class="text-xs opacity-60 font-bold uppercase tracking-wider bg-base-200">
+          <th>Nombre de Usuario</th>
+          <th>Correo Electrónico</th>
+          <th>Rol asignado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users()" class="hover">
+          <td class="font-bold text-base-content">{{ u.username }}</td>
+          <td class="font-light">{{ u.email }}</td>
+          <td>
+            <span
+              [ngClass]="u.role === 'admin' ? 'badge-error text-white' : 'badge-ghost'"
+              class="badge font-bold uppercase text-[9px] p-2 tracking-widest"
+            >
+              {{ u.role || 'user' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    *ngIf="!loading() && activeTab() === 'places'"
+    class="overflow-x-auto card bg-base-100 border border-base-300 shadow-xl rounded-2xl animate-fade-in"
+  >
+    <table class="table table-zebra w-full text-base-content">
+      <thead>
+        <tr class="text-xs opacity-60 font-bold uppercase tracking-wider bg-base-200">
+          <th>Lugar</th>
+          <th>Ciudad</th>
+          <th>Creador</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of places()" class="hover">
+          <td>
+            <div class="flex items-center gap-3">
+              <img
+                [src]="p.images?.[0]?.url || p.image || 'https://placehold.co/100x100'"
+                class="w-12 h-12 rounded-xl object-cover border"
+              />
+              <span class="font-bold text-base-content">{{ p.name }}</span>
+            </div>
+          </td>
+          <td class="font-medium opacity-70">📍 {{ p.location?.city || 'Desconocida' }}</td>
+          <td class="text-sm font-light">
+            <span class="block font-medium text-base-content">{{
+              p.user?.username || 'Sistema'
+            }}</span>
+            <span class="block opacity-50 text-xs">{{ p.user?.email }}</span>
+          </td>
+          <td class="text-right">
+            <button
+              (click)="openDeleteModal(p._id)"
+              class="btn btn-error btn-sm btn-outline hover:scale-105 transition-all gap-1"
+            >
+              🗑️ Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<app-confirm-modal
+  [open]="showDeleteModal()"
+  title="Eliminar Destino (Admin)"
+  message="¿Seguro que quieres eliminar permanentemente este destino? Esta acción borrará todas las reseñas, imágenes y favoritos asociados."
+  (confirm)="confirmDeletePlace()"
+  (cancel)="closeDeleteModal()"
+></app-confirm-modal>
