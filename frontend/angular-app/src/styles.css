@@ -1,11 +1,12 @@
+/* src/styles.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Leaflet */
 .leaflet-container {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 350px !important; 
   border-radius: 1rem;
   z-index: 1;
 }
