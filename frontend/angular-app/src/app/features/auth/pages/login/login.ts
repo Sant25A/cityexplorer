@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -14,6 +14,9 @@ import { NotificationService } from '../../../../core/services/notification.serv
 export class Login {
   private fb = inject(FormBuilder);
   private notify = inject(NotificationService);
+
+  // Signal para ver/ocultar contraseña
+  mostrarContrasena = signal<boolean>(false);
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

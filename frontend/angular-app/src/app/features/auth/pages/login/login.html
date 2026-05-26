@@ -84,20 +84,9 @@
             <span class="label-text font-semibold opacity-70">Contraseña</span>
           </div>
           <div class="relative">
-            <input
-              type="password"
-              formControlName="password"
-              class="input input-bordered w-full pl-10 focus:input-primary transition-all duration-300 bg-base-100/50"
-              placeholder="••••••••"
-              autocomplete="current-password"
-              [ngClass]="{
-                'input-error':
-                  form.get('password')?.invalid && (form.get('password')?.touched || submitted),
-              }"
-            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary"
+              class="h-5 w-5 absolute left-3 top-3.5 opacity-40 text-primary z-10"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -109,7 +98,65 @@
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
               />
             </svg>
+
+            <input
+              [type]="mostrarContrasena() ? 'text' : 'password'"
+              formControlName="password"
+              class="input input-bordered w-full pl-10 pr-12 focus:input-primary transition-all duration-300 bg-base-100/50"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              [ngClass]="{
+                'input-error':
+                  form.get('password')?.invalid && (form.get('password')?.touched || submitted),
+              }"
+            />
+
+            <button
+              type="button"
+              (click)="mostrarContrasena.set(!mostrarContrasena())"
+              class="btn btn-ghost btn-circle btn-sm absolute right-2 top-2.5 opacity-50 hover:opacity-100 text-primary transition-all duration-200"
+              title="{{ mostrarContrasena() ? 'Ocultar contraseña' : 'Mostrar contraseña' }}"
+            >
+              <svg
+                *ngIf="mostrarContrasena()"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+
+              <svg
+                *ngIf="!mostrarContrasena()"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 014.132-5.4M9.69 9.69a3 3 0 004.243 4.243m1.804-1.804L21 21M3 3l3.59 3.59m0 0A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.4m-4.564-1.08l-.304.304"
+                />
+              </svg>
+            </button>
           </div>
+
           <label class="label h-6">
             <span
               *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"

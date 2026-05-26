@@ -1,28 +1,50 @@
 <footer class="text-base-content border-t border-base-300 pt-16 pb-8 px-6">
   <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-    
     <div class="space-y-4">
       <div class="flex items-center gap-2">
         <div class="p-2 bg-primary rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
         </div>
         <span class="text-2xl font-black tracking-tighter text-primary italic">CityExplorer</span>
       </div>
       <p class="text-sm opacity-70 leading-relaxed font-light">
-        Tu guía definitiva para descubrir rincones mágicos, sabores únicos y experiencias inolvidables en el corazón de la ciudad.
+        Tu guía definitiva para descubrir rincones mágicos, sabores únicos y experiencias
+        inolvidables en el corazón de la ciudad.
       </p>
     </div>
 
     <div>
       <h3 class="footer-title opacity-100 text-primary mb-6">Explora</h3>
       <div class="flex flex-col gap-3">
-        <button (click)="toggleSection('about')" class="link link-hover text-sm flex items-center gap-2 group">
+        <button
+          (click)="toggleSection('about')"
+          class="link link-hover text-sm flex items-center gap-2 group"
+        >
           <span class="h-1 w-0 bg-secondary transition-all group-hover:w-2"></span> Sobre nosotros
         </button>
-        <button (click)="toggleSection('privacy')" class="link link-hover text-sm flex items-center gap-2 group">
+        <button
+          (click)="toggleSection('privacy')"
+          class="link link-hover text-sm flex items-center gap-2 group"
+        >
           <span class="h-1 w-0 bg-secondary transition-all group-hover:w-2"></span> Privacidad
         </button>
       </div>
@@ -46,37 +68,86 @@
     <div>
       <h3 class="footer-title opacity-100 text-primary mb-6">Comunidad</h3>
       <div class="flex gap-4">
-        <a href="https://www.facebook.com/share/1D7qteM8DU/" class="btn btn-ghost btn-circle hover:bg-primary hover:text-white transition-all duration-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        <a
+          href="https://www.facebook.com/share/1D7qteM8DU/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-ghost btn-circle hover:bg-primary hover:text-white transition-all duration-500"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+          </svg>
         </a>
-        <a href="https://www.instagram.com/diego_andrader2011?igsh=Z255dmo2N2ZxczR2" class="btn btn-ghost btn-circle hover:bg-secondary hover:text-white transition-all duration-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+
+        <a
+          href="https://www.instagram.com/diego_andrader2011?igsh=Z255dmo2N2ZxczR2"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-ghost btn-circle hover:bg-secondary hover:text-white transition-all duration-500"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+          </svg>
         </a>
       </div>
       <div class="mt-6">
-        <span class="badge badge-outline badge-sm opacity-50 font-bold tracking-widest uppercase">Version 1.2.0</span>
+        <span class="badge badge-outline badge-sm opacity-50 font-bold tracking-widest uppercase"
+          >Version 1.2.0</span
+        >
       </div>
     </div>
   </div>
 
-  <div *ngIf="activeSection" class="max-w-4xl mx-auto bg-base-100 p-8 rounded-3xl border border-primary/10 shadow-xl mb-12 animate-fade-in-up">
+  <div
+    *ngIf="activeSection"
+    class="max-w-4xl mx-auto bg-base-100 p-8 rounded-3xl border border-primary/10 shadow-xl mb-12 animate-fade-in-up"
+  >
     <div class="flex justify-between items-start mb-4">
-      <h3 class="text-2xl font-black text-primary capitalize">{{ activeSection === 'about' ? 'Sobre Nosotros' : 'Privacidad' }}</h3>
+      <h3 class="text-2xl font-black text-primary capitalize">
+        {{ activeSection === 'about' ? 'Sobre Nosotros' : 'Privacidad' }}
+      </h3>
       <button (click)="activeSection = null" class="btn btn-xs btn-circle btn-ghost">✕</button>
     </div>
-    
+
     <div [ngSwitch]="activeSection">
       <p *ngSwitchCase="'about'" class="opacity-80 leading-relaxed italic">
-        "CityExplorer nació en el 2026 de la mano de Ana Itzel Santana Aniceto y Diego Andrade Rojas, con el propósito de conectar a las personas con su entorno. Creemos que cada lugar tiene una historia y cada rincón un toque único que merece ser compartido."
+        "CityExplorer nació en el 2026 de la mano de Ana Itzel Santana Aniceto y Diego Andrade
+        Rojas, con el propósito de conectar a las personas con su entorno. Creemos que cada lugar
+        tiene una historia y cada rincón un toque único que merece ser compartido."
       </p>
       <p *ngSwitchCase="'privacy'" class="opacity-80 leading-relaxed text-sm">
-        Tu privacidad es importante para nosotros. En CityExplorer, tus datos de ubicación y preferencias solo se procesan para darte recomendaciones personalizadas. No vendemos tus datos a terceros y usamos cifrado de máximo nivel para proteger tu cuenta.
+        Tu privacidad es importante para nosotros. En CityExplorer, tus datos de ubicación y
+        preferencias solo se procesan para darte recomendaciones personalizadas. No vendemos tus
+        datos a terceros y usamos cifrado de máximo nivel para proteger tu cuenta.
       </p>
     </div>
   </div>
 
-  <div class="border-t border-base-300 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-medium">
+  <div
+    class="border-t border-base-300 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-medium"
+  >
     <p>© {{ anioActual }} CityExplorer Project. Hecho con ❤️ para el mundo.</p>
-
   </div>
 </footer>

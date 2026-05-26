@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -23,6 +23,10 @@ export class Register {
   private fb = inject(FormBuilder);
   private notify = inject(NotificationService);
   captchaToken: string | null = null;
+
+  // Signals para ver/ocultar contraseñas
+  mostrarPassword = signal<boolean>(false);
+  mostrarConfirmPassword = signal<boolean>(false);
 
   submitted = false;
 
