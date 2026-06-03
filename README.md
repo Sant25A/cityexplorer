@@ -71,37 +71,37 @@ E[Usuario] --> A
 ### Pantalla de inicio
 
 <p align="center">
-  <img src="docs/home.png" alt="CityExplorer Home" width="400">
+  <img src="docs/home.png" alt="CityExplorer Home" width="500">
 </p>
 
 ### Explorar lugares
 
 <p align="center">
-  <img src="docs/places.png" alt="CityExplorer Places" width="400">
+  <img src="docs/places.png" alt="CityExplorer Places" width="500">
 </p>
 
 ### Detalles de lugar
 
 <p align="center">
-  <img src="docs/place-detail.png" alt="CityExplorer PlaceDetail" width="400">
+  <img src="docs/place-detail.png" alt="CityExplorer PlaceDetail" width="500">
 </p>
 
 ### Favoritos
 
 <p align="center">
-  <img src="docs/favorites.png" alt="CityExplorer Favorites" width="400">
+  <img src="docs/favorites.png" alt="CityExplorer Favorites" width="500">
 </p>
 
 ### Creación de lugar
 
 <p align="center">
-  <img src="docs/create.png" alt="CityExplorer Creación de Lugar" width="400">
+  <img src="docs/create.png" alt="CityExplorer Creación de Lugar" width="500">
 </p>
 
 ### Modo oscuro
 
 <p align="center">
-  <img src="docs/darkMode.png" alt="CityExplorer DarkMode" width="400">
+  <img src="docs/darkMode.png" alt="CityExplorer DarkMode" width="500">
 </p>
 
 ## Características técnicas
@@ -183,11 +183,3 @@ Durante el desarrollo se abordaron desafíos como:
 
 🌐 Aplicación:
 https://cityexplorer-gamma.vercel.app/
-
-### Usuario de prueba
-
-Correo:
-front@test.com
-
-Contraseña:
-Solicitar acceso o crear cuenta propia.
