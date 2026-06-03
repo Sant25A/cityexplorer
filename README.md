@@ -70,27 +70,39 @@ E[Usuario] --> A
 
 ### Pantalla de inicio
 
-![Inicio](docs/home.png)
+<p align="center">
+  <img src="docs/home.png" alt="CityExplorer Home" width="400">
+</p>
 
 ### Explorar lugares
 
-![Lugares](docs/places.png)
+<p align="center">
+  <img src="docs/places.png" alt="CityExplorer Places" width="400">
+</p>
 
 ### Detalles de lugar
 
-![Detalles](docs/place-detail.png)
+<p align="center">
+  <img src="docs/place-detail.png" alt="CityExplorer PlaceDetail" width="400">
+</p>
 
 ### Favoritos
 
-![Favoritos](docs/favorites.png)
+<p align="center">
+  <img src="docs/favorites.png" alt="CityExplorer Favorites" width="400">
+</p>
 
 ### Creación de lugar
 
-![Creacion](docs/create.png)
+<p align="center">
+  <img src="docs/create.png" alt="CityExplorer Creación de Lugar" width="400">
+</p>
 
 ### Modo oscuro
 
-![Dark](docs/darkMode.png)
+<p align="center">
+  <img src="docs/darkMode.png" alt="CityExplorer DarkMode" width="400">
+</p>
 
 ## Características técnicas
 
@@ -118,22 +130,44 @@ E[Usuario] --> A
 
 ## Estructura del proyecto
 
-CityExplorer
+frontend/angular-app
 
-├── frontend/angular-app
-│   ├── src
-│   ├── components
-│   ├── services
-│   └── pages
-│
-├── backend
-│   ├── controllers
-│   ├── routes
-│   ├── middleware
-│   ├── models
-│   └── config
-│
-└── docs
+* src
+* core
+* features
+* layout
+* shared
+* environments
+
+
+backend
+
+* controllers
+* routes
+* middleware
+* models
+* config
+* utils
+
+
+## Instalación
+
+### Clonar repositorio
+
+git clone ...
+
+### Frontend
+
+cd frontend
+npm install
+npm start
+
+### Backend
+
+cd backend
+npm install
+npm run dev
+
 
 ## Retos técnicos
 
